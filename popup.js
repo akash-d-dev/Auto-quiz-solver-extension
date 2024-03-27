@@ -5,14 +5,14 @@ let currentQuestion = 0;
 let G_API_KEY = localStorage.getItem("G_API_KEY") || "";
 let autoStart = "0";
 
-const getAutoStart = () => {
+function getAutoStart() {
   return new Promise((resolve) => {
     chrome.storage.sync.get("autoStart", function (data) {
       const autoStart = data.autoStart || "0";
       resolve(autoStart);
     });
   });
-};
+}
 
 function startSolvingQuiz() {
   if (currentQuestion === 5) {
@@ -21,22 +21,28 @@ function startSolvingQuiz() {
     return;
   }
   correctAnswer = ansData[currentQuestion];
-  //option button
-  document.getElementsByClassName("css-1njvaw6")[correctAnswer].click();
+  const optionBtn =
+    document.getElementsByClassName("css-1njvaw6")[correctAnswer];
+  // if (!optionBtn) return;
+  optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
-    //submit button
-    document.getElementsByClassName("chakra-button css-1mb6l07")[0].click();
+    const submitBtn = document.getElementsByClassName(
+      "chakra-button css-1mb6l07"
+    )[0];
+    // if (!submitBtn) return;
+    submitBtn.click();
     setTimeout(() => {
       startSolvingQuiz();
     }, 500);
   }, 1000);
 }
 
-function start() {
-  console.log("Clicked start button");
-  let startBtn = document.querySelectorAll("button")[4];
-  startBtn.click();
+function handlePopup() {
+  const closeBtn = document.getElementsByClassName(
+    "chakra-button css-1l9ol99"
+  )[0];
+  if (closeBtn) closeBtn.click();
   setTimeout(() => {
     if (!main()) return;
     setTimeout(() => {
@@ -49,43 +55,6 @@ function start() {
     }, 2000);
   }, 1500);
 }
-
-function init() {
-  let launchBtn = document.getElementsByClassName(
-    "chakra-button css-1ou4qco"
-  )[0];
-  launchBtn.addEventListener("click", () => {
-    start();
-  });
-  launchBtn.style.backgroundColor = "green";
-}
-
-(async () => {
-  autoStart = await getAutoStart();
-
-  if (G_API_KEY === "") {
-    console.log(G_API_KEY);
-    G_API_KEY = String(prompt("Please enter your Google API Key"));
-    localStorage.setItem("G_API_KEY", G_API_KEY);
-    console.log(G_API_KEY);
-    autoStart === "1"
-      ? setTimeout(() => {
-          start();
-        }, 6000)
-      : setTimeout(() => {
-          init();
-        }, 6000);
-  } else {
-    autoStart === "1"
-      ? setTimeout(() => {
-          start();
-        }, 6000)
-      : setTimeout(() => {
-          init();
-        }, 6000);
-  }
-  console.log("Foreground script running");
-})();
 
 function openTabWithUrl(url) {
   chrome.tabs.create({ url: url });
@@ -178,3 +147,51 @@ async function main() {
     return false;
   }
 }
+
+function start() {
+  console.log("Clicked start button");
+  let startBtn = document.querySelectorAll("button")[4];
+  if (!startBtn) return;
+  startBtn.click();
+  setTimeout(() => {
+    handlePopup();
+  }, 1500);
+}
+
+function init() {
+  let launchBtn = document.getElementsByClassName(
+    "chakra-button css-1ou4qco"
+  )[0];
+  if (!launchBtn) return;
+  launchBtn.addEventListener("click", () => {
+    start();
+  });
+  launchBtn.style.backgroundColor = "green";
+}
+
+(async () => {
+  autoStart = await getAutoStart();
+
+  if (G_API_KEY === "") {
+    console.log(G_API_KEY);
+    G_API_KEY = String(prompt("Please enter your Google API Key"));
+    localStorage.setItem("G_API_KEY", G_API_KEY);
+    console.log(G_API_KEY);
+    autoStart === "1"
+      ? setTimeout(() => {
+          start();
+        }, 6000)
+      : setTimeout(() => {
+          init();
+        }, 6000);
+  } else {
+    autoStart === "1"
+      ? setTimeout(() => {
+          start();
+        }, 6000)
+      : setTimeout(() => {
+          init();
+        }, 6000);
+  }
+  console.log("Foreground script running");
+})();
