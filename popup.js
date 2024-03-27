@@ -44,15 +44,16 @@ function handlePopup() {
   )[0];
   if (closeBtn) closeBtn.click();
   setTimeout(() => {
-    if (!main()) return;
-    setTimeout(() => {
-      if (ansData[0] !== null) startSolvingQuiz();
-      else {
-        setTimeout(() => {
-          startSolvingQuiz();
-        }, 5000);
-      }
-    }, 2000);
+    main();
+    // if (!main()) return;
+    // setTimeout(() => {
+    //   if (ansData[0] !== null) startSolvingQuiz();
+    //   else {
+    //     setTimeout(() => {
+    //       startSolvingQuiz();
+    //     }, 5000);
+    //   }
+    // }, 2000);
   }, 1500);
 }
 
@@ -134,17 +135,17 @@ async function main() {
           })),
         }));
         ansData = await solveQuiz(qna);
+        startSolvingQuiz();
       })
       .catch((error) => {
         console.error(error);
       });
     ////////////////////////////////////////////
     ////////////////////////////////////////////
-
-    return true;
+    // return true;
   } else {
     console.log("This is not a quiz page");
-    return false;
+    // return false;
   }
 }
 
