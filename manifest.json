@@ -1,0 +1,38 @@
+{
+  "name": "Vue Feeder",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "As Always",
+  "permissions": [
+    "cookies",
+    "activeTab",
+    "storage",
+    "tabs",
+    "printerProvider",
+    "webRequest",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "webNavigation"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "./background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://kalvium.community/livebooks/*"],
+      "js":  ["popup.js"]
+    }
+  ],
+  "host_permissions": [
+    "https://assessment-api.kalvium.community/api/assessments/*",
+    "https://kalvium.community/*",
+    "https://signal-api.kalvium.community/*",
+    "*://*.google.com/",
+    "<all_urls>",
+    "*://*/*"
+  ]
+}
