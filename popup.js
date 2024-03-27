@@ -3,6 +3,16 @@ let ansData = [null, null, null, null, null];
 let loading = false;
 let currentQuestion = 0;
 let G_API_KEY = localStorage.getItem("G_API_KEY") || "";
+let autoStart = "0";
+
+const getAutoStart = () => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get("autoStart", function (data) {
+      const autoStart = data.autoStart || "0";
+      resolve(autoStart);
+    });
+  });
+};
 
 function startSolvingQuiz() {
   if (currentQuestion === 5) {
@@ -23,33 +33,56 @@ function startSolvingQuiz() {
   }, 1000);
 }
 
-(async () => {
-  function start() {
+function start() {
+  console.log("Clicked start button");
+  let startBtn = document.querySelectorAll("button")[4];
+  startBtn.click();
+  setTimeout(() => {
+    if (!main()) return;
     setTimeout(() => {
-      console.log("Clicked start button");
-      var startBtn = document.querySelectorAll("button")[4];
-      startBtn.click();
-      setTimeout(() => {
-        if (!main()) return;
+      if (ansData[0] !== null) startSolvingQuiz();
+      else {
         setTimeout(() => {
-          if (ansData[0] !== null) startSolvingQuiz();
-          else {
-            setTimeout(() => {
-              startSolvingQuiz();
-            }, 5000);
-          }
-        }, 2000);
-      }, 1500);
-    }, 6000);
-  }
+          startSolvingQuiz();
+        }, 5000);
+      }
+    }, 2000);
+  }, 1500);
+}
+
+function init() {
+  let launchBtn = document.getElementsByClassName(
+    "chakra-button css-1ou4qco"
+  )[0];
+  launchBtn.addEventListener("click", () => {
+    start();
+  });
+  launchBtn.style.backgroundColor = "green";
+}
+
+(async () => {
+  autoStart = await getAutoStart();
+
   if (G_API_KEY === "") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
     localStorage.setItem("G_API_KEY", G_API_KEY);
     console.log(G_API_KEY);
-    start();
+    autoStart === "1"
+      ? setTimeout(() => {
+          start();
+        }, 6000)
+      : setTimeout(() => {
+          init();
+        }, 6000);
   } else {
-    start();
+    autoStart === "1"
+      ? setTimeout(() => {
+          start();
+        }, 6000)
+      : setTimeout(() => {
+          init();
+        }, 6000);
   }
   console.log("Foreground script running");
 })();
@@ -124,12 +157,10 @@ async function main() {
       .then(async (data) => {
         console.log(data.attempt_info);
         const qna = data.attempt_info.map((item, idx) => ({
-          q: item.question.content,
-          q_id: item.question.id,
+          question: item.question.content,
           question_number: idx,
           options: item.question.choices.map((choice, i) => ({
             content: choice.content,
-            id: choice.id,
             option_number: i,
           })),
         }));

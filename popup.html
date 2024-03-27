@@ -1,58 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <!-- <script src="./popup.js"></script> -->
+  <script src="./home.js"></script>
   <script src="./background.js"></script>
   <head>
     <title>Get Answers</title>
     <style>
       /* BEGIN: Added CSS */
       body {
-        background-color: black;
+        background-color: rgb(255, 255, 255);
         font-family: Arial, sans-serif;
       }
 
-      #myButton {
-        border-radius: 4px;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        margin: 4px 2px;
-        cursor: pointer;
-        background-color: #ff9966; /* Ass-like color */
-        transition: background-color 0.3s ease; /* Smooth transition */
-      }
-
-      #myButton:hover {
-        background-color: #ff9910; /* Lighter shade on hover */
-        /* add box shadow */
-      }
-
-      #green {
-        border-radius: 4px;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        margin: 4px 2px;
-        cursor: pointer;
-        background-color: rgba(255, 255, 255, 0.288); /* Ass-like color */
-        transition: background-color 0.3s ease; /* Smooth transition */
-      }
-
-      #green:hover {
-        background-color: green; /* Lighter shade on hover */
-        /* add box shadow */
-      }
+      
 
       .flex {
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 100px;
+        height: 50px;
         /* flex-direction: column; */
       }
       /* END: Added CSS */
@@ -60,8 +26,12 @@
   </head>
   <body>
     <div class="flex">
-      <button id="green">Spank Now!</button>
-      <!-- <button id="myButton">Comming Soon... (^_^)</button> -->
+        <label for="auto-start">Auto Start:</label>
+        <select name="auto-start" id="auto-start">
+          <option value="1">On</option>
+          <option value="2">Off</option>
+        </select>
+
     </div>
   </body>
 </html>
