@@ -45,15 +45,6 @@ function handlePopup() {
   if (closeBtn) closeBtn.click();
   setTimeout(() => {
     main();
-    // if (!main()) return;
-    // setTimeout(() => {
-    //   if (ansData[0] !== null) startSolvingQuiz();
-    //   else {
-    //     setTimeout(() => {
-    //       startSolvingQuiz();
-    //     }, 5000);
-    //   }
-    // }, 2000);
   }, 1500);
 }
 
@@ -63,14 +54,17 @@ function openTabWithUrl(url) {
 
 async function solveQuiz(qna) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/", {
-      method: "POST",
-      body: JSON.stringify(qna),
-      headers: {
-        "Content-Type": "application/json",
-        key: G_API_KEY,
-      },
-    });
+    const response = await fetch(
+      "https://jhat-pat-quiz-node-api-2.vercel.app/",
+      {
+        method: "POST",
+        body: JSON.stringify(qna),
+        headers: {
+          "Content-Type": "application/json",
+          key: G_API_KEY,
+        },
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
