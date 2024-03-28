@@ -52,8 +52,10 @@ function openTabWithUrl(url) {
   chrome.tabs.create({ url: url });
 }
 
-async function solveQuiz(qna) {
+async function solveQuiz(qna, tries = 0) {
+  const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
+    if (tries > 2) throw new Error("Failed to fetch quiz");
     const response = await fetch(
       "https://jhat-pat-quiz-node-api-2.vercel.app/",
       {
@@ -68,13 +70,27 @@ async function solveQuiz(qna) {
 
     if (response.ok) {
       const data = await response.json();
-      const ansArray = JSON.parse(data);
+      console.log(data);
+      let ansArray = [];
+      try {
+        ansArray = JSON.parse(data);
+      } catch (error) {
+        ansArray = await solveQuiz(qna, tries + 1);
+      }
+      if (ansArray.length !== 5) throw new Error("Failed to fetch all answers");
+      ansArray.map((ans) => {
+        if (ans === -1) {
+          throw new Error("Failed to fetch all answers");
+        }
+      });
+      background.style.backgroundColor = "#ecffec";
       console.log(ansArray);
       return ansArray;
     } else {
       throw new Error("Failed to fetch quiz");
     }
   } catch (error) {
+    background.style.backgroundColor = "#ff605f";
     console.error(error);
     throw error;
   }
@@ -154,9 +170,9 @@ function start() {
 }
 
 function init() {
-  let launchBtn = document.getElementsByClassName(
-    "chakra-button css-1ou4qco"
-  )[0];
+  let launchBtn =
+    document.getElementsByClassName("chakra-button css-1ou4qco")[0] ||
+    document.getElementsByClassName("chakra-button css-1lzs6nh")[0];
   if (!launchBtn) return;
   launchBtn.addEventListener("click", () => {
     start();
