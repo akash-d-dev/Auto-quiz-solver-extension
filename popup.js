@@ -182,8 +182,9 @@ function init() {
 
 (async () => {
   autoStart = await getAutoStart();
+  console.log(G_API_KEY, typeof G_API_KEY);
 
-  if (G_API_KEY === "") {
+  if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
     localStorage.setItem("G_API_KEY", G_API_KEY);
