@@ -52,10 +52,9 @@ function openTabWithUrl(url) {
   chrome.tabs.create({ url: url });
 }
 
-async function solveQuiz(qna, tries = 0) {
+async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
-    if (tries > 2) throw new Error("Failed to fetch quiz");
     const response = await fetch(
       "https://jhat-pat-quiz-node-api-2.vercel.app/",
       {
@@ -71,11 +70,10 @@ async function solveQuiz(qna, tries = 0) {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      let ansArray = [];
       try {
         ansArray = JSON.parse(data);
       } catch (error) {
-        ansArray = await solveQuiz(qna, tries + 1);
+        throw new Error("Gemini API failed to fetch answers");
       }
       if (ansArray.length !== 5) throw new Error("Failed to fetch all answers");
       ansArray.map((ans) => {
@@ -118,7 +116,8 @@ async function main() {
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
-
+    const background = document.getElementsByClassName("css-1t3n037")[0];
+    background.style.backgroundColor = "#fbfac0";
     // make a request to the api
     fetch(quizUrl, {
       method: "POST",
@@ -148,6 +147,7 @@ async function main() {
         startSolvingQuiz();
       })
       .catch((error) => {
+        background.style.backgroundColor = "#ff605f";
         console.error(error);
       });
     ////////////////////////////////////////////
@@ -182,8 +182,6 @@ function init() {
 
 (async () => {
   autoStart = await getAutoStart();
-  console.log(G_API_KEY, typeof G_API_KEY);
-
   if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
