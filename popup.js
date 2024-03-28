@@ -145,7 +145,7 @@ async function main() {
 
 function start() {
   console.log("Clicked start button");
-  let startBtn = document.querySelectorAll("button")[4];
+  let startBtn = document.getElementsByClassName("chakra-button css-fgqgi2")[0];
   if (!startBtn) return;
   startBtn.click();
   setTimeout(() => {

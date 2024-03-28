@@ -1,8 +1,8 @@
 {
-  "name": "Vue Feeder",
+  "name": "Kalvium Auto Quiz",
   "version": "1.0.0",
   "manifest_version": 3,
-  "description": "As Always",
+  "description": "Fuck quiz",
   "permissions": [
     "cookies",
     "activeTab",
