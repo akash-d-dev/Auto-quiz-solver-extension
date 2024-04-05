@@ -50,7 +50,7 @@ function openTabWithUrl(url) {
 async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
-    const response = await fetch("https://jhat-pat-quiz-node-api-2.vercel.app/", {
+    const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
       method: "POST",
       body: JSON.stringify(qna),
       headers: {
