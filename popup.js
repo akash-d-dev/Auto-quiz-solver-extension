@@ -21,15 +21,12 @@ function startSolvingQuiz() {
     return;
   }
   correctAnswer = ansData[currentQuestion];
-  const optionBtn =
-    document.getElementsByClassName("css-1njvaw6")[correctAnswer];
+  const optionBtn = document.getElementsByClassName("css-1njvaw6")[correctAnswer];
   // if (!optionBtn) return;
   optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
-    const submitBtn = document.getElementsByClassName(
-      "chakra-button css-1mb6l07"
-    )[0];
+    const submitBtn = document.getElementsByClassName("chakra-button css-1mb6l07")[0];
     // if (!submitBtn) return;
     submitBtn.click();
     setTimeout(() => {
@@ -39,9 +36,7 @@ function startSolvingQuiz() {
 }
 
 function handlePopup() {
-  const closeBtn = document.getElementsByClassName(
-    "chakra-button css-1l9ol99"
-  )[0];
+  const closeBtn = document.getElementsByClassName("chakra-button css-1l9ol99")[0];
   if (closeBtn) closeBtn.click();
   setTimeout(() => {
     main();
@@ -55,23 +50,18 @@ function openTabWithUrl(url) {
 async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
-    const response = await fetch(
-      "https://jhat-pat-quiz-node-api-2.vercel.app/",
-      {
-        method: "POST",
-        body: JSON.stringify(qna),
-        headers: {
-          "Content-Type": "application/json",
-          key: G_API_KEY,
-        },
-      }
-    );
+    const response = await fetch("https://jhat-pat-quiz-node-api-2.vercel.app/", {
+      method: "POST",
+      body: JSON.stringify(qna),
+      headers: {
+        "Content-Type": "application/json",
+        key: G_API_KEY,
+      },
+    });
 
     if (response.ok) {
-      const data = await response.json();
-      console.log(data);
       try {
-        ansArray = JSON.parse(data);
+        ansArray = await response.json();
       } catch (error) {
         throw new Error("Gemini API failed to fetch answers");
       }
