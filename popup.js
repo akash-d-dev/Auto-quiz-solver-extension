@@ -3,13 +3,24 @@ let ansData = [null, null, null, null, null];
 let loading = false;
 let currentQuestion = 0;
 let G_API_KEY = localStorage.getItem("G_API_KEY") || "";
+let waitFor = localStorage.getItem("waitFor") || 0;
 let autoStart = "0";
+let GEMINI_MODEL = "gemini-1.0-pro";
 
 function getAutoStart() {
   return new Promise((resolve) => {
     chrome.storage.sync.get("autoStart", function (data) {
       const autoStart = data.autoStart || "0";
       resolve(autoStart);
+    });
+  });
+}
+
+function getGeminiModel() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get("geminiModel", function (data) {
+      const geminiModel = data.geminiModel || "gemini-1.0-pro";
+      resolve(geminiModel);
     });
   });
 }
@@ -48,18 +59,23 @@ function openTabWithUrl(url) {
 }
 
 async function solveQuiz(qna) {
+  console.log("Starting to get answers from gemini");
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
-    const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
+    console.log("Getting...");
+    // const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
+    const response = await fetch("http://localhost:8000/", {
       method: "POST",
       body: JSON.stringify(qna),
       headers: {
         "Content-Type": "application/json",
         key: G_API_KEY,
+        model: GEMINI_MODEL,
       },
     });
 
     if (response.ok) {
+      console.log("Got it...");
       try {
         ansArray = await response.json();
       } catch (error) {
@@ -80,6 +96,7 @@ async function solveQuiz(qna) {
   } catch (error) {
     background.style.backgroundColor = "#ff605f";
     console.error(error);
+    console.error("Sorry we failed");
     throw error;
   }
 }
@@ -170,8 +187,9 @@ function init() {
   launchBtn.style.backgroundColor = "green";
 }
 
-(async () => {
+async function runApp() {
   autoStart = await getAutoStart();
+  GEMINI_MODEL = await getGeminiModel();
   if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
@@ -180,18 +198,34 @@ function init() {
     autoStart === "1"
       ? setTimeout(() => {
           start();
-        }, 6000)
+        }, waitFor)
       : setTimeout(() => {
           init();
-        }, 6000);
+        }, waitFor);
   } else {
     autoStart === "1"
       ? setTimeout(() => {
           start();
-        }, 6000)
+        }, waitFor)
       : setTimeout(() => {
           init();
-        }, 6000);
+        }, waitFor);
   }
   console.log("Foreground script running");
+}
+
+(async () => {
+  if (waitFor <= 0) {
+    const userInput = prompt("Please enter a value for waitFor:");
+    const parsedInput = parseInt(userInput);
+    if (parsedInput > 0) {
+      waitFor = parsedInput * 1000;
+      localStorage.setItem("waitFor", waitFor);
+      runApp();
+    } else {
+      alert("Enter a number greater than 0, reload the page and try again");
+    }
+  } else {
+    runApp();
+  }
 })();
