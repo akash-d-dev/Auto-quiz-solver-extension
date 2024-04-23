@@ -63,8 +63,8 @@ async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
     console.log("Getting...");
-    // const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
-    const response = await fetch("http://localhost:8000/", {
+    const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
+      // const response = await fetch("http://localhost:8000/", {
       method: "POST",
       body: JSON.stringify(qna),
       headers: {
