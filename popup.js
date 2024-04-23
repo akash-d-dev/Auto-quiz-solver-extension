@@ -216,7 +216,7 @@ async function runApp() {
 
 (async () => {
   if (waitFor <= 0) {
-    const userInput = prompt("Please enter a value for waitFor:");
+    const userInput = prompt("How many seconds to wait for page load?");
     const parsedInput = parseInt(userInput);
     if (parsedInput > 0) {
       waitFor = parsedInput * 1000;
