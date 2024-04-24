@@ -35,8 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   delayElement.addEventListener("change", function () {
-    const delay = delayElement.value;
-
+    let delay = delayElement.value;
+    if (delay < 0 || delay > 100) delayElement.value = 8;
+    delay = delayElement.value;
     chrome.storage.sync.set({ delay: delay });
   });
 });
