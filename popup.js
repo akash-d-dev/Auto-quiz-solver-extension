@@ -1,9 +1,8 @@
 let ansData = [null, null, null, null, null];
-// let ansData = [1,1,1,1,1];
 let loading = false;
 let currentQuestion = 0;
 let G_API_KEY = localStorage.getItem("G_API_KEY") || "";
-let waitFor = localStorage.getItem("waitFor") || 0;
+let delay = 8;
 let autoStart = "0";
 let GEMINI_MODEL = "gemini-1.0-pro";
 
@@ -25,6 +24,15 @@ function getGeminiModel() {
   });
 }
 
+function getWaitFor() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get("delay", function (data) {
+      const delay = data.delay || 8;
+      resolve(delay);
+    });
+  });
+}
+
 function startSolvingQuiz() {
   if (currentQuestion === 5) {
     currentQuestion = 0;
@@ -33,12 +41,10 @@ function startSolvingQuiz() {
   }
   correctAnswer = ansData[currentQuestion];
   const optionBtn = document.getElementsByClassName("css-1njvaw6")[correctAnswer];
-  // if (!optionBtn) return;
   optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
     const submitBtn = document.getElementsByClassName("chakra-button css-1mb6l07")[0];
-    // if (!submitBtn) return;
     submitBtn.click();
     setTimeout(() => {
       startSolvingQuiz();
@@ -46,6 +52,7 @@ function startSolvingQuiz() {
   }, 1000);
 }
 
+//Deal with warning popup
 function handlePopup() {
   const closeBtn = document.getElementsByClassName("chakra-button css-1l9ol99")[0];
   if (closeBtn) closeBtn.click();
@@ -113,19 +120,14 @@ async function main() {
   const regex = /https:\/\/kalvium\.community\/quiz\/[^\/]+$/;
 
   if (regex.test(currentTabUrl)) {
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
-    // get token and make a request to the api
+    // Get token and make a request to the api to get the quiz
     let quizUrl = `https://assessment-api.kalvium.community/api/assessments/${currentTabUrl
       .split("/")
       .pop()}/attempts`;
     let userToken = token.value;
 
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
     const background = document.getElementsByClassName("css-1t3n037")[0];
     background.style.backgroundColor = "#fbfac0";
-    // make a request to the api
     fetch(quizUrl, {
       method: "POST",
       headers: {
@@ -150,6 +152,7 @@ async function main() {
             option_number: i,
           })),
         }));
+        //Send the quiz to the gemini API
         ansData = await solveQuiz(qna);
         startSolvingQuiz();
       })
@@ -159,13 +162,12 @@ async function main() {
       });
     ////////////////////////////////////////////
     ////////////////////////////////////////////
-    // return true;
   } else {
     console.log("This is not a quiz page");
-    // return false;
   }
 }
 
+// Start main function
 function start() {
   console.log("Clicked start button");
   let startBtn = document.getElementsByClassName("chakra-button css-fgqgi2")[0];
@@ -176,6 +178,7 @@ function start() {
   }, 1500);
 }
 
+// Initialize the script
 function init() {
   let launchBtn =
     document.getElementsByClassName("chakra-button css-1ou4qco")[0] ||
@@ -187,9 +190,11 @@ function init() {
   launchBtn.style.backgroundColor = "green";
 }
 
-async function runApp() {
+// Run the script
+(async () => {
   autoStart = await getAutoStart();
   GEMINI_MODEL = await getGeminiModel();
+  delay = await getWaitFor();
   if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
@@ -198,34 +203,21 @@ async function runApp() {
     autoStart === "1"
       ? setTimeout(() => {
           start();
-        }, waitFor)
+        }, delay * 1000)
       : setTimeout(() => {
           init();
-        }, waitFor);
+        }, delay * 1000);
   } else {
     autoStart === "1"
       ? setTimeout(() => {
           start();
-        }, waitFor)
+        }, delay * 1000)
       : setTimeout(() => {
           init();
-        }, waitFor);
+        }, delay * 1000);
   }
   console.log("Foreground script running");
-}
-
-(async () => {
-  if (waitFor <= 0) {
-    const userInput = prompt("How many seconds to wait for page load?");
-    const parsedInput = parseInt(userInput);
-    if (parsedInput > 0) {
-      waitFor = parsedInput * 1000;
-      localStorage.setItem("waitFor", waitFor);
-      runApp();
-    } else {
-      alert("Enter a number greater than 0, reload the page and try again");
-    }
-  } else {
-    runApp();
-  }
+  console.log("Dealy: ", delay);
+  console.log("Auto Start: ", autoStart === "1" ? "Yes" : "No");
+  console.log("Gemini Model: ", GEMINI_MODEL);
 })();

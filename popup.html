@@ -7,15 +7,15 @@
     <style>
       /* BEGIN: Added CSS */
       body {
-        background-color: rgb(255, 255, 255);
+        background-color: rgb(255, 208, 208);
         font-family: Arial, sans-serif;
       }
 
       .flex {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        padding: 8px;
+        padding: 4px;
         /* width: 150px; */
         /* height: 50px; */
         /* flex-direction: column; */
@@ -24,11 +24,24 @@
       select {
         margin: 8px;
       }
-
+      input {
+        width: 42px;
+        margin: 8px;
+      }
+      img {
+        width: 30px;
+        height: 30px;
+        margin: 0 auto;
+        display: block;
+        border: 1px solid black;
+      }
       /* END: Added CSS */
     </style>
   </head>
   <body>
+    <div class="flex">
+      <img src="./img/akash-d-dev.jpg" alt="logo" />
+    </div>
     <div class="flex">
       <label for="auto-start">Auto Start:</label>
       <select name="auto-start" id="auto-start">
@@ -43,6 +56,12 @@
         <option value="gemini-1.0-pro">Gemini-1.0</option>
         <option value="gemini-1.5-pro">Gemini-1.5</option>
       </select>
+    </div>
+
+    <div class="flex">
+      <label for="gemini-model">Delay(sec)</label>
+      <input type="number" name="delay" id="delay" min="1" max="100" />
+    </div>
     </div>
   </body>
 </html>
