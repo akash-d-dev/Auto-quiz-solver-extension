@@ -108,43 +108,44 @@ async function solveQuiz(qna) {
   }
 }
 
-async function main() {
-  const getToken = new Promise((resolve) => {
+async function main(qna = null, retryBtn = false) {
+  const { token, currentTabUrl } = await new Promise((resolve) => {
     chrome.storage.sync.get(["token", "currentTabUrl"], (data) => {
       resolve(data);
     });
   });
 
-  const { token, currentTabUrl } = await getToken;
-
   const regex = /https:\/\/kalvium\.community\/quiz\/[^\/]+$/;
 
   if (regex.test(currentTabUrl)) {
-    // Get token and make a request to the api to get the quiz
     let quizUrl = `https://assessment-api.kalvium.community/api/assessments/${currentTabUrl
       .split("/")
       .pop()}/attempts`;
     let userToken = token.value;
 
     const background = document.getElementsByClassName("css-1t3n037")[0];
+    const qNum = document.getElementsByClassName("chakra-text css-itr5sx")[0];
+
     background.style.backgroundColor = "#fbfac0";
-    fetch(quizUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userToken,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
+
+    try {
+      if (!qna) {
+        const response = await fetch(quizUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: userToken,
+          },
+        });
+
+        if (!response.ok) {
           throw new Error("Failed to fetch quiz");
         }
-      })
-      .then(async (data) => {
+
+        const data = await response.json();
         console.log(data.attempt_info);
-        const qna = data.attempt_info.map((item, idx) => ({
+
+        qna = data.attempt_info.map((item, idx) => ({
           question: item.question.content,
           question_number: idx,
           options: item.question.choices.map((choice, i) => ({
@@ -152,16 +153,25 @@ async function main() {
             option_number: i,
           })),
         }));
-        //Send the quiz to the gemini API
-        ansData = await solveQuiz(qna);
-        startSolvingQuiz();
-      })
-      .catch((error) => {
-        background.style.backgroundColor = "#ff605f";
-        console.error(error);
-      });
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
+      }
+
+      ansData = await solveQuiz(qna);
+      startSolvingQuiz();
+    } catch (error) {
+      background.style.backgroundColor = "#ff605f";
+      if (!retryBtn) {
+        const button = document.createElement("button");
+        button.className = "chakra-button css-fgqgi2";
+        button.textContent = "Retry";
+        button.style.marginLeft = "16px";
+        button.style.backgroundColor = "green";
+        button.addEventListener("click", () => {
+          main(qna, true);
+        });
+        qNum.appendChild(button);
+      }
+      console.error(error);
+    }
   } else {
     console.log("This is not a quiz page");
   }
