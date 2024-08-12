@@ -40,11 +40,14 @@ function startSolvingQuiz() {
     return;
   }
   correctAnswer = ansData[currentQuestion];
-  const optionBtn = document.getElementsByClassName("css-1njvaw6")[correctAnswer];
+  const optionBtn =
+    document.getElementsByClassName("css-1njvaw6")[correctAnswer];
   optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
-    const submitBtn = document.getElementsByClassName("chakra-button css-1mb6l07")[0];
+    const submitBtn = document.getElementsByClassName(
+      "chakra-button css-1mb6l07"
+    )[0];
     submitBtn.click();
     setTimeout(() => {
       startSolvingQuiz();
@@ -54,7 +57,9 @@ function startSolvingQuiz() {
 
 //Deal with warning popup
 function handlePopup() {
-  const closeBtn = document.getElementsByClassName("chakra-button css-1l9ol99")[0];
+  const closeBtn = document.getElementsByClassName(
+    "chakra-button css-1l9ol99"
+  )[0];
   if (closeBtn) closeBtn.click();
   setTimeout(() => {
     main();
@@ -70,7 +75,7 @@ async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
     console.log("Getting...");
-    const response = await fetch("https://cerulean-tuna-sock.cyclic.app", {
+    const response = await fetch("https://k-quiz-solver-api.onrender.com", {
       // const response = await fetch("http://localhost:8000/", {
       method: "POST",
       body: JSON.stringify(qna),
