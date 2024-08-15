@@ -75,21 +75,26 @@ async function solveQuiz(qna) {
   const background = document.getElementsByClassName("css-1t3n037")[0];
   try {
     console.log("Getting...");
-    const response = await fetch("https://k-quiz-solver-api.onrender.com", {
-      // const response = await fetch("http://localhost:8000/", {
-      method: "POST",
-      body: JSON.stringify(qna),
-      headers: {
-        "Content-Type": "application/json",
-        key: G_API_KEY,
-        model: GEMINI_MODEL,
-      },
-    });
+    const response = await fetch(
+      "https://jhat-pat-quiz-node-api.onrender.com",
+      {
+        // const response = await fetch("http://localhost:8000/", {
+        method: "POST",
+        body: JSON.stringify(qna),
+        headers: {
+          "Content-Type": "application/json",
+          key: G_API_KEY,
+          model: GEMINI_MODEL,
+        },
+      }
+    );
+    console.log("Response: ", response);
 
     if (response.ok) {
       console.log("Got it...");
       try {
         ansArray = await response.json();
+        console.log(ansArray);
       } catch (error) {
         throw new Error("Gemini API failed to fetch answers");
       }
