@@ -1,10 +1,91 @@
 let ansData = [null, null, null, null, null];
+let ansArray = [-1, -1, -1, -1, -1];
 let loading = false;
 let currentQuestion = 0;
 let G_API_KEY = localStorage.getItem("G_API_KEY") || "";
 let delay = 8;
 let autoStart = "0";
 let GEMINI_MODEL = "gemini-1.0-pro";
+let modal = null;
+let modalContent;
+let toggleModalBtn;
+let closeModelBtn;
+
+function createModalWindow() {
+  modal = document.createElement("div");
+  modal.style.position = "fixed";
+  modal.style.top = "50px"; // Position at top right corner
+  modal.style.right = "20px";
+  modal.style.backgroundColor = "#fff";
+  modal.style.padding = "20px";
+  modal.style.borderRadius = "8px";
+  modal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
+  modal.style.width = "auto"; // Adjust width as needed
+  modal.style.height = "auto"; // Adjust height as needed
+  modal.style.maxHeight = "400px"; // Adjust height as needed
+  modal.style.overflowY = "auto";
+  modal.style.zIndex = "10000";
+
+  modalContent = document.createElement("div");
+  modalContent.style.marginBottom = "10px";
+  modalContent.id = "modal-content";
+
+  toggleModalBtn = document.createElement("button");
+  toggleModalBtn.textContent = "Click";
+  toggleModalBtn.style.marginRight = "10px";
+  toggleModalBtn.style.padding = "8px 16px";
+  toggleModalBtn.style.backgroundColor = "#007bff";
+  toggleModalBtn.style.color = "#fff";
+  toggleModalBtn.style.border = "none";
+  toggleModalBtn.style.borderRadius = "4px";
+  toggleModalBtn.style.cursor = "pointer";
+
+  closeModelBtn = document.createElement("button");
+  closeModelBtn.textContent = "Close";
+  closeModelBtn.style.marginLeft = "10px";
+  closeModelBtn.style.padding = "8px 16px";
+  closeModelBtn.style.backgroundColor = "red";
+  closeModelBtn.style.color = "#fff";
+  closeModelBtn.style.border = "none";
+  closeModelBtn.style.borderRadius = "4px";
+  closeModelBtn.style.cursor = "pointer";
+
+  // Append elements
+  modal.appendChild(modalContent);
+  modal.appendChild(toggleModalBtn);
+  modal.appendChild(closeModelBtn);
+  document.body.appendChild(modal);
+
+  // Close modal functionality
+  toggleModalBtn.addEventListener("click", () => {
+    if (modalContent.innerHTML !== "") {
+      modalContent.innerHTML = "";
+    } else {
+      toggleModalWindow();
+    }
+  });
+
+  closeModelBtn.addEventListener("click", () => {
+    removeModalWindow();
+  });
+}
+
+function toggleModalWindow() {
+  // Show the modal and display ansArray
+  const modalContent = document.getElementById("modal-content");
+  modalContent.innerHTML = `<h3>Quiz Answers</h3><pre>${JSON.stringify(
+    ansArray,
+    null,
+    2
+  )}</pre>`;
+}
+
+function removeModalWindow() {
+  modal.remove();
+  modal = null;
+
+  // modal.style.display = "none";
+}
 
 function getAutoStart() {
   return new Promise((resolve) => {
@@ -37,6 +118,7 @@ function startSolvingQuiz() {
   if (currentQuestion === 5) {
     currentQuestion = 0;
     console.log("All questions answered");
+    removeModalWindow();
     return;
   }
   correctAnswer = ansData[currentQuestion];
@@ -95,6 +177,8 @@ async function solveQuiz(qna) {
       try {
         ansArray = await response.json();
         console.log(ansArray);
+        createModalWindow();
+        toggleModalWindow();
       } catch (error) {
         throw new Error("Gemini API failed to fetch answers");
       }
@@ -105,7 +189,6 @@ async function solveQuiz(qna) {
         }
       });
       background.style.backgroundColor = "#ecffec";
-      console.log(ansArray);
       return ansArray;
     } else {
       throw new Error("Failed to fetch quiz");
@@ -119,6 +202,9 @@ async function solveQuiz(qna) {
 }
 
 async function main(qna = null, retryBtn = false) {
+  if (retryBtn) {
+    if (modal !== null) removeModalWindow();
+  }
   const { token, currentTabUrl } = await new Promise((resolve) => {
     chrome.storage.sync.get(["token", "currentTabUrl"], (data) => {
       resolve(data);
