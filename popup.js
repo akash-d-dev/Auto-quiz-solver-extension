@@ -178,7 +178,7 @@ async function solveQuiz(qna) {
         ansArray = await response.json();
         console.log(ansArray);
         createModalWindow();
-        toggleModalWindow();
+        // toggleModalWindow();
       } catch (error) {
         throw new Error("Gemini API failed to fetch answers");
       }
