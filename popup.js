@@ -10,6 +10,7 @@ let modal = null;
 let modalContent;
 let toggleModalBtn;
 let closeModelBtn;
+let kalviApiToken = 0;
 
 function createModalWindow() {
   modal = document.createElement("div");
@@ -114,6 +115,15 @@ function getWaitFor() {
   });
 }
 
+function getKalviApiToken() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get("kalviApiToken", function (data) {
+      const kalviApiToken = data.kalviApiToken || 0;
+      resolve(kalviApiToken);
+    });
+  });
+}
+
 function startSolvingQuiz() {
   if (currentQuestion === 5) {
     currentQuestion = 0;
@@ -133,7 +143,7 @@ function startSolvingQuiz() {
     submitBtn.click();
     setTimeout(() => {
       startSolvingQuiz();
-    }, 500);
+    }, 1500);
   }, 1000);
 }
 
@@ -211,13 +221,15 @@ async function main(qna = null, retryBtn = false) {
     });
   });
 
+  console.log("Token: ", token, "Token Value: ", token.value);
+
   const regex = /https:\/\/kalvium\.community\/quiz\/[^\/]+$/;
 
   if (regex.test(currentTabUrl)) {
     let quizUrl = `https://assessment-api.kalvium.community/api/assessments/${currentTabUrl
       .split("/")
       .pop()}/attempts`;
-    let userToken = token.value;
+    let userToken = kalviApiToken ? kalviApiToken : token.value;
 
     const background = document.getElementsByClassName("css-1t3n037")[0];
     const qNum = document.getElementsByClassName("chakra-text css-itr5sx")[0];
@@ -301,6 +313,7 @@ function init() {
   autoStart = await getAutoStart();
   GEMINI_MODEL = await getGeminiModel();
   delay = await getWaitFor();
+  kalviApiToken = await getKalviApiToken();
   if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));

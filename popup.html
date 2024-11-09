@@ -47,6 +47,9 @@
         justify-content: center;
         align-items: center;
       }
+      /* #token-input{
+        width: 75px !important;
+      } */
       /* END: Added CSS */
     </style>
   </head>
@@ -75,6 +78,12 @@
     <div class="flex">
       <label for="gemini-model">Delay(sec)</label>
       <input type="number" name="delay" id="delay" min="1" max="100" />
+    </div>
+
+    <div class="flex">
+      <label for="api-token">Token(opt)</label>
+     <input type="text" id="token-input">
+     <button id="save-token">Save</button>
     </div>
     </div>
   </body>
