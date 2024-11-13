@@ -12,6 +12,8 @@ let toggleModalBtn;
 let closeModelBtn;
 let kalviApiToken = 0;
 
+console.log("https://jhat-pat-quiz-node-api.onrender.com");
+
 function createModalWindow() {
   modal = document.createElement("div");
   modal.style.position = "fixed";
@@ -128,7 +130,7 @@ function startSolvingQuiz() {
   if (currentQuestion === 5) {
     currentQuestion = 0;
     console.log("All questions answered");
-    removeModalWindow();
+    // removeModalWindow();
     return;
   }
   correctAnswer = ansData[currentQuestion];
@@ -221,7 +223,7 @@ async function main(qna = null, retryBtn = false) {
     });
   });
 
-  console.log("Token: ", token, "Token Value: ", token.value);
+  // console.log("Token: ", token, "Token Value: ", token.value);
 
   const regex = /https:\/\/kalvium\.community\/quiz\/[^\/]+$/;
 
@@ -234,7 +236,7 @@ async function main(qna = null, retryBtn = false) {
     const background = document.getElementsByClassName("css-1t3n037")[0];
     const qNum = document.getElementsByClassName("chakra-text css-itr5sx")[0];
 
-    background.style.backgroundColor = "#fbfac0";
+    if (background) background.style.backgroundColor = "#fbfac0";
 
     try {
       if (!qna) {
