@@ -136,6 +136,8 @@ function startSolvingQuiz() {
   correctAnswer = ansData[currentQuestion];
   const optionBtn =
     document.getElementsByClassName("css-1njvaw6")[correctAnswer];
+
+  console.log(optionBtn);
   optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
