@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const autoStartElement = document.getElementById("auto-start");
   const geminiModelElement = document.getElementById("gemini-model");
   const delayElement = document.getElementById("delay");
-  const kalviApiTokenElement = document.getElementById("api-token");
-  const saveBtn = document.getElementById("save-token");
+  const kalviApiTokenElement = document.getElementById("kalvi-api-token");
+  // const saveBtn = document.getElementById("save-token");
 
   chrome.storage.sync.get("autoStart", function (data) {
     autoStart = data.autoStart || "0";
@@ -48,16 +48,16 @@ document.addEventListener("DOMContentLoaded", function () {
     kalviApiTokenElement.value = kalviApiToken;
   });
 
-  saveBtn.addEventListener("click", function () {
+  kalviApiTokenElement.addEventListener("change", function () {
     let kalviApiToken = kalviApiTokenElement.value;
-    if (kalviApiToken.length < 1) kalviApiTokenElement.value = 0;
+    if (kalviApiToken.length < 1) kalviApiTokenElement.value = "";
     kalviApiToken = kalviApiTokenElement.value;
     chrome.storage.sync.set({ kalviApiToken: kalviApiToken });
   });
 
-  // kalviApiTokenElement.addEventListener("change", function () {
+  // saveBtn.addEventListener("click", function () {
   //   let kalviApiToken = kalviApiTokenElement.value;
-  //   if (kalviApiToken.length < 1) kalviApiTokenElement.value = null;
+  //   if (kalviApiToken.length < 1) kalviApiTokenElement.value = "";
   //   kalviApiToken = kalviApiTokenElement.value;
   //   chrome.storage.sync.set({ kalviApiToken: kalviApiToken });
   // });

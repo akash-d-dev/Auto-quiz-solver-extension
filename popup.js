@@ -10,7 +10,7 @@ let modal = null;
 let modalContent;
 let toggleModalBtn;
 let closeModelBtn;
-let kalviApiToken = 0;
+let kalviApiToken = "";
 
 console.log("https://jhat-pat-quiz-node-api.onrender.com");
 
@@ -120,7 +120,7 @@ function getWaitFor() {
 function getKalviApiToken() {
   return new Promise((resolve) => {
     chrome.storage.sync.get("kalviApiToken", function (data) {
-      const kalviApiToken = data.kalviApiToken || 0;
+      const kalviApiToken = data.kalviApiToken || "";
       resolve(kalviApiToken);
     });
   });
@@ -231,7 +231,11 @@ async function main(qna = null, retryBtn = false) {
     let quizUrl = `https://assessment-api.kalvium.community/api/assessments/${currentTabUrl
       .split("/")
       .pop()}/attempts`;
+
     let userToken = kalviApiToken ? kalviApiToken : token.value;
+    console.log("Using curr token:", token.value === kalviApiToken);
+    console.log("kalviApiToken: ", kalviApiToken);
+    console.log("Curr Token: ", token.value);
 
     const background = document.getElementsByClassName("css-1t3n037")[0];
     const qNum = document.getElementsByClassName("chakra-text css-itr5sx")[0];
@@ -316,6 +320,7 @@ function init() {
   GEMINI_MODEL = await getGeminiModel();
   delay = await getWaitFor();
   kalviApiToken = await getKalviApiToken();
+  console.log("Existing KalviApiToken: ", kalviApiToken ? true : false);
   if (G_API_KEY === "" || G_API_KEY === "null") {
     console.log(G_API_KEY);
     G_API_KEY = String(prompt("Please enter your Google API Key"));
