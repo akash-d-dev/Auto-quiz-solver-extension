@@ -235,9 +235,18 @@ async function main(qna = null, retryBtn = false) {
       .pop()}/attempts`;
 
     let userToken = kalviApiToken ? kalviApiToken : token.value;
-    console.log("Using curr token:", token.value === kalviApiToken);
-    console.log("kalviApiToken: ", kalviApiToken);
-    console.log("Curr Token: ", token.value);
+    console.log("##################################");
+    console.log("Using curr token:"),
+      console.log(token.value === kalviApiToken);
+    console.log("##################################");
+    console.log("##################################");
+    console.log("kalviApiToken: ");
+    console.log(kalviApiToken);
+    console.log("##################################");
+    console.log("##################################");
+    console.log("Curr Token: ");
+    console.log(token.value);
+    console.log("##################################");
 
     const background = document.getElementsByClassName("css-1t3n037")[0];
     const qNum = document.getElementsByClassName("chakra-text css-itr5sx")[0];
