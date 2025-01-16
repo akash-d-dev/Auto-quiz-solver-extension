@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   kalviApiTokenElement.addEventListener("change", function () {
     let kalviApiToken = kalviApiTokenElement.value;
-    if (kalviApiToken.length !== 1974) kalviApiTokenElement.value = "";
     kalviApiToken = kalviApiTokenElement.value;
     chrome.storage.sync.set({ kalviApiToken: kalviApiToken });
   });
