@@ -13,7 +13,7 @@ let toggleModalBtn;
 let closeModelBtn;
 let kalviApiToken = '';
 
-console.log('https://jhat-pat-quiz-node-api.onrender.com');
+console.log('https://k-quiz-solver-api.onrender.com');
 
 function createModalWindow() {
   modal = document.createElement('div');
@@ -171,27 +171,29 @@ async function solveQuiz(qna) {
   console.log('Starting to get answers from gemini');
   const background = document.getElementsByClassName('css-1t3n037')[0];
   try {
+    let keyToUse =
+      AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest'
+        ? C_API_KEY
+        : G_API_KEY;
+
+    let modelToUse =
+      AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest' ? 'gpt' : 'gemini';
+
+    console.log('Key Used: ', keyToUse);
+    console.log('Model Used: ', modelToUse);
+
     console.log('Getting...');
-    const response = await fetch(
-      'https://jhat-pat-quiz-node-api.onrender.com',
-      {
-        // const response = await fetch("http://localhost:8000/", {
-        method: 'POST',
-        body: JSON.stringify(qna),
-        headers: {
-          'Content-Type': 'application/json',
-          key:
-            AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest'
-              ? C_API_KEY
-              : G_API_KEY,
-          model: AI_MODEL,
-          modelType:
-            AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest'
-              ? 'gpt'
-              : 'gemini',
-        },
-      }
-    );
+    const response = await fetch('https://k-quiz-solver-api.onrender.com', {
+      // const response = await fetch('http://localhost:8000/', {
+      method: 'POST',
+      body: JSON.stringify(qna),
+      headers: {
+        'Content-Type': 'application/json',
+        key: keyToUse,
+        model: AI_MODEL,
+        model_type: modelToUse,
+      },
+    });
     console.log('Response: ', response);
 
     if (response.ok) {

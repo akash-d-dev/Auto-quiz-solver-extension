@@ -1,10 +1,10 @@
 console.log('home script running');
 
-let autoStart = '0';
+let autoStart = '2';
 
 document.addEventListener('DOMContentLoaded', function () {
   const autoStartElement = document.getElementById('auto-start');
-  const aiModel = document.getElementById('ai-model');
+  const aiModelElement = document.getElementById('ai-model');
   const delayElement = document.getElementById('delay');
   const kalviApiTokenElement = document.getElementById('kalvi-api-token');
   // const saveBtn = document.getElementById("save-token");
@@ -13,43 +13,37 @@ document.addEventListener('DOMContentLoaded', function () {
     autoStart = data.autoStart || '0';
     autoStartElement.value = autoStart;
   });
-
   autoStartElement.addEventListener('change', function () {
     autoStart = autoStartElement.value;
     chrome.storage.sync.set({ autoStart: autoStart });
   });
 
   chrome.storage.sync.get('aiModel', function (data) {
-    const aiModel = data.aiModel || 'gemini-1.5-pro';
-    aiModel.value = aiModel;
+    let aiModel = data.aiModel || 'gemini-1.5-pro';
+    aiModelElement.value = aiModel;
   });
-
-  aiModel.addEventListener('change', function () {
-    const aiModel = aiModel.value;
-
+  aiModelElement.addEventListener('change', function () {
+    let aiModel = aiModelElement.value;
     chrome.storage.sync.set({ aiModel: aiModel });
   });
 
   chrome.storage.sync.get('delay', function (data) {
-    const delay = data.delay || 8;
+    let delay = data.delay || 8;
     delayElement.value = delay;
   });
-
   delayElement.addEventListener('change', function () {
-    let delay = delayElement.value;
-    if (delay < 0 || delay > 100) delayElement.value = 8;
-    delay = delayElement.value;
+    let delay = Number(delayElement.value);
+    if (delay < 1 || delay > 100) delay = 8;
+    delayElement.value = delay;
     chrome.storage.sync.set({ delay: delay });
   });
 
   chrome.storage.sync.get('kalviApiToken', function (data) {
-    const kalviApiToken = data.kalviApiToken || '';
+    let kalviApiToken = data.kalviApiToken || '';
     kalviApiTokenElement.value = kalviApiToken;
   });
-
   kalviApiTokenElement.addEventListener('change', function () {
     let kalviApiToken = kalviApiTokenElement.value;
-    kalviApiToken = kalviApiTokenElement.value;
     chrome.storage.sync.set({ kalviApiToken: kalviApiToken });
   });
 
