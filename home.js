@@ -1,54 +1,53 @@
-console.log("home script running");
+console.log('home script running');
 
-let autoStart = "0";
+let autoStart = '0';
 
-document.addEventListener("DOMContentLoaded", function () {
-  const autoStartElement = document.getElementById("auto-start");
-  const geminiModelElement = document.getElementById("gemini-model");
-  const delayElement = document.getElementById("delay");
-  const kalviApiTokenElement = document.getElementById("kalvi-api-token");
+document.addEventListener('DOMContentLoaded', function () {
+  const autoStartElement = document.getElementById('auto-start');
+  const aiModel = document.getElementById('ai-model');
+  const delayElement = document.getElementById('delay');
+  const kalviApiTokenElement = document.getElementById('kalvi-api-token');
   // const saveBtn = document.getElementById("save-token");
 
-  chrome.storage.sync.get("autoStart", function (data) {
-    autoStart = data.autoStart || "0";
+  chrome.storage.sync.get('autoStart', function (data) {
+    autoStart = data.autoStart || '0';
     autoStartElement.value = autoStart;
   });
 
-  autoStartElement.addEventListener("change", function () {
+  autoStartElement.addEventListener('change', function () {
     autoStart = autoStartElement.value;
-
     chrome.storage.sync.set({ autoStart: autoStart });
   });
 
-  chrome.storage.sync.get("geminiModel", function (data) {
-    const geminiModel = data.geminiModel || "gemini-1.0-pro";
-    geminiModelElement.value = geminiModel;
+  chrome.storage.sync.get('aiModel', function (data) {
+    const aiModel = data.aiModel || 'gemini-1.5-pro';
+    aiModel.value = aiModel;
   });
 
-  geminiModelElement.addEventListener("change", function () {
-    const geminiModel = geminiModelElement.value;
+  aiModel.addEventListener('change', function () {
+    const aiModel = aiModel.value;
 
-    chrome.storage.sync.set({ geminiModel: geminiModel });
+    chrome.storage.sync.set({ aiModel: aiModel });
   });
 
-  chrome.storage.sync.get("delay", function (data) {
+  chrome.storage.sync.get('delay', function (data) {
     const delay = data.delay || 8;
     delayElement.value = delay;
   });
 
-  delayElement.addEventListener("change", function () {
+  delayElement.addEventListener('change', function () {
     let delay = delayElement.value;
     if (delay < 0 || delay > 100) delayElement.value = 8;
     delay = delayElement.value;
     chrome.storage.sync.set({ delay: delay });
   });
 
-  chrome.storage.sync.get("kalviApiToken", function (data) {
-    const kalviApiToken = data.kalviApiToken || "";
+  chrome.storage.sync.get('kalviApiToken', function (data) {
+    const kalviApiToken = data.kalviApiToken || '';
     kalviApiTokenElement.value = kalviApiToken;
   });
 
-  kalviApiTokenElement.addEventListener("change", function () {
+  kalviApiTokenElement.addEventListener('change', function () {
     let kalviApiToken = kalviApiTokenElement.value;
     kalviApiToken = kalviApiTokenElement.value;
     chrome.storage.sync.set({ kalviApiToken: kalviApiToken });
