@@ -168,7 +168,7 @@ function openTabWithUrl(url) {
 }
 
 async function solveQuiz(qna) {
-  console.log('Starting to get answers from gemini');
+  console.log('Starting to get answers from ai');
   const background = document.getElementsByClassName('css-1t3n037')[0];
   try {
     let keyToUse =
