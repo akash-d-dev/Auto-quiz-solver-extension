@@ -12,8 +12,8 @@ let modalContent;
 let toggleModalBtn;
 let closeModelBtn;
 let kalviApiToken = '';
-
-console.log('https://k-quiz-solver-api.onrender.com');
+const apiUrl = 'https://k-quiz-solver-api.onrender.com';
+// const apiUrl = 'http://localhost:8000';
 
 function createModalWindow() {
   modal = document.createElement('div');
@@ -138,7 +138,7 @@ function startSolvingQuiz() {
   const optionBtn =
     document.getElementsByClassName('css-1njvaw6')[correctAnswer];
 
-  console.log(optionBtn);
+  // console.log(optionBtn);
   optionBtn.click();
   currentQuestion++;
   setTimeout(() => {
@@ -148,7 +148,7 @@ function startSolvingQuiz() {
     submitBtn.click();
     setTimeout(() => {
       startSolvingQuiz();
-    }, 1500);
+    }, 1000);
   }, 1000);
 }
 
@@ -172,19 +172,20 @@ async function solveQuiz(qna) {
   const background = document.getElementsByClassName('css-1t3n037')[0];
   try {
     let keyToUse =
-      AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest'
+      AI_MODEL === 'gpt-3.5-turbo' || AI_MODEL === 'chatgpt-4o-latest'
         ? C_API_KEY
         : G_API_KEY;
 
     let modelToUse =
-      AI_MODEL === 'gpt-3.5-turbo' || 'chatgpt-4o-latest' ? 'gpt' : 'gemini';
+      AI_MODEL === 'gpt-3.5-turbo' || AI_MODEL === 'chatgpt-4o-latest'
+        ? 'gpt'
+        : 'gemini';
 
     console.log('Key Used: ', keyToUse);
     console.log('Model Used: ', modelToUse);
-
     console.log('Getting...');
-    const response = await fetch('https://k-quiz-solver-api.onrender.com', {
-      // const response = await fetch('http://localhost:8000/', {
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       body: JSON.stringify(qna),
       headers: {
@@ -246,9 +247,8 @@ async function main(qna = null, retryBtn = false) {
 
     let userToken = kalviApiToken ? kalviApiToken : token.value;
     console.log('##################################');
-    console.log('Using curr token:'),
-      console.log(token.value === kalviApiToken);
-    console.log('##################################');
+    console.log('Using curr token:', userToken === token.value),
+      console.log('##################################');
     console.log('##################################');
     console.log('kalviApiToken: ');
     console.log(kalviApiToken);
@@ -339,6 +339,7 @@ function init() {
 (async () => {
   autoStart = await getAutoStart();
   AI_MODEL = await getAiModel();
+  console.log('getAiModel: ', AI_MODEL);
   delay = await getWaitFor();
   kalviApiToken = await getKalviApiToken();
   console.log('Existing KalviApiToken: ', kalviApiToken ? true : false);
