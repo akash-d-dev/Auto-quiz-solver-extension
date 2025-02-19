@@ -79,8 +79,14 @@ class QuizSolver {
 
   toggleModalWindow() {
     const modalContent = document.getElementById('modal-content');
+    const updatedAnsArray = this.ansArray.map((ans) => ans + 1);
+
+    const ansToDisplay = updatedAnsArray.map((ans, idx) => {
+      return `Q${idx + 1}: ${ans}`;
+    });
+
     modalContent.innerHTML = `<h3>Quiz Answers</h3><pre>${JSON.stringify(
-      this.ansArray,
+      ansToDisplay,
       null,
       2
     )}</pre>`;
