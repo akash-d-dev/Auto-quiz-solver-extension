@@ -287,7 +287,7 @@ class QuizSolver {
 
           const data = await response.json();
           console.log(data.attempt_info);
-          qna = formartQuizData(data.attempt_info);
+          qna = this.formartQuizData(data.attempt_info);
         }
 
         this.ansData = await this.getQuizAnswers(qna);
