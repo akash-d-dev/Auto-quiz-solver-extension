@@ -221,6 +221,17 @@ class QuizSolver {
     }
   }
 
+  formartQuizData(data) {
+    return data.map((item, idx) => ({
+      question: item.question.content,
+      question_number: idx,
+      options: item.question.choices.map((choice, i) => ({
+        content: choice.content,
+        option_number: i,
+      })),
+    }));
+  }
+
   async main(qna = null, retryBtn = false) {
     if (retryBtn) {
       if (this.modal !== null) this.removeModalWindow();
@@ -276,15 +287,7 @@ class QuizSolver {
 
           const data = await response.json();
           console.log(data.attempt_info);
-
-          qna = data.attempt_info.map((item, idx) => ({
-            question: item.question.content,
-            question_number: idx,
-            options: item.question.choices.map((choice, i) => ({
-              content: choice.content,
-              option_number: i,
-            })),
-          }));
+          qna = formartQuizData(data.attempt_info);
         }
 
         this.ansData = await this.solveQuiz(qna);
