@@ -155,7 +155,7 @@ class QuizSolver {
     }, 1500);
   }
 
-  async solveQuiz(qna) {
+  async getQuizAnswers(qna) {
     console.log('Starting to get answers from ai');
     const background = document.getElementsByClassName('css-1t3n037')[0];
     try {
@@ -290,7 +290,7 @@ class QuizSolver {
           qna = formartQuizData(data.attempt_info);
         }
 
-        this.ansData = await this.solveQuiz(qna);
+        this.ansData = await this.getQuizAnswers(qna);
         this.startSolvingQuiz();
       } catch (error) {
         background.style.backgroundColor = '#ff605f';
