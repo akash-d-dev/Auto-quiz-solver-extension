@@ -179,6 +179,10 @@ class QuizSolver {
           ? this.C_API_KEY
           : this.G_API_KEY;
 
+      if (keyToUse === 'null') {
+        throw new Error('API Key not provided');
+      }
+
       let modelToUse =
         this.AI_MODEL === 'gpt-3.5-turbo' ||
         this.AI_MODEL === 'chatgpt-4o-latest'
@@ -209,7 +213,7 @@ class QuizSolver {
           this.createModalWindow();
           // toggleModalWindow();
         } catch (error) {
-          throw new Error('Gemini API failed to fetch answers');
+          throw new Error('AI API failed to fetch answers');
         }
         if (this.ansArray.length !== 5)
           throw new Error('Failed to fetch all answers');
@@ -350,9 +354,10 @@ class QuizSolver {
     this.delay = await this.getWaitFor();
     this.kalviApiToken = await this.getKalviApiToken();
     console.log('Existing KalviApiToken: ', this.kalviApiToken ? true : false);
-    if (this.C_API_KEY === '' || this.C_API_KEY === 'null') {
+    if (this.C_API_KEY === '' || !this.C_API_KEY) {
       this.C_API_KEY = String(prompt('Please enter your OpenAi API Key'));
-      localStorage.setItem('C_API_KEY', this.this.C_API_KEY);
+      localStorage.setItem('C_API_KEY', this.C_API_KEY);
+      console.log('OpenAi API Key Provided', this.C_API_KEY);
       this.autoStart === '1'
         ? setTimeout(() => {
             this.start();
@@ -361,9 +366,10 @@ class QuizSolver {
             this.init();
           }, this.delay * 1000);
     }
-    if (this.G_API_KEY === '' || this.G_API_KEY === 'null') {
+    if (this.G_API_KEY === '' || !this.G_API_KEY) {
       this.G_API_KEY = String(prompt('Please enter your Google API Key'));
       localStorage.setItem('G_API_KEY', this.G_API_KEY);
+      console.log('Google API Key Provided: ', this.G_API_KEY);
       this.autoStart === '1'
         ? setTimeout(() => {
             this.start();
