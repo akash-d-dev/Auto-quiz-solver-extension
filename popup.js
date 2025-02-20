@@ -334,7 +334,6 @@ class QuizSolver {
     launchBtn.style.backgroundColor = 'green';
   }
 
-  // Run the script
   async runScript() {
     this.autoStart = await this.getAutoStart();
     this.AI_MODEL = await this.getAiModel();
@@ -342,44 +341,26 @@ class QuizSolver {
     this.kalviApiToken = await this.getKalviApiToken();
 
     console.log('getAiModel: ', this.AI_MODEL);
-    console.log('Existing KalviApiToken: ', this.kalviApiToken ? true : false);
+    console.log('Existing KalviApiToken: ', Boolean(this.kalviApiToken));
 
-    if (this.C_API_KEY === '' || !this.C_API_KEY) {
-      this.C_API_KEY = String(prompt('Please enter your OpenAi API Key'));
+    if (!this.C_API_KEY) {
+      this.C_API_KEY = String(prompt('Please enter your OpenAI API Key'));
       localStorage.setItem('C_API_KEY', this.C_API_KEY);
-      console.log('OpenAi API Key Provided', this.C_API_KEY);
-      this.autoStart === '1'
-        ? setTimeout(() => {
-            this.start();
-          }, this.delay * 1000)
-        : setTimeout(() => {
-            this.init();
-          }, this.delay * 1000);
+      console.log('OpenAI API Key Provided:', this.C_API_KEY);
     }
 
-    if (this.G_API_KEY === '' || !this.G_API_KEY) {
+    if (!this.G_API_KEY) {
       this.G_API_KEY = String(prompt('Please enter your Google API Key'));
       localStorage.setItem('G_API_KEY', this.G_API_KEY);
-      console.log('Google API Key Provided: ', this.G_API_KEY);
-      this.autoStart === '1'
-        ? setTimeout(() => {
-            this.start();
-          }, this.delay * 1000)
-        : setTimeout(() => {
-            this.init();
-          }, this.delay * 1000);
+      console.log('Google API Key Provided:', this.G_API_KEY);
     }
 
-    this.autoStart === '1'
-      ? setTimeout(() => {
-          this.start();
-        }, this.delay * 1000)
-      : setTimeout(() => {
-          this.init();
-        }, this.delay * 1000);
+    setTimeout(() => {
+      this.autoStart === '1' ? this.start() : this.init();
+    }, this.delay * 1000);
 
     console.log('Foreground script running');
-    console.log('Dealy: ', this.delay);
+    console.log('Delay: ', this.delay);
     console.log('Auto Start: ', this.autoStart === '1' ? 'Yes' : 'No');
     console.log('AI Model: ', this.AI_MODEL);
   }

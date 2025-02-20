@@ -1,6 +1,6 @@
 console.log('home script running');
 
-let autoStart = '2';
+let autoStart = '0';
 let aiModel = 'gemini-1.5-pro';
 
 document.addEventListener('DOMContentLoaded', function () {
