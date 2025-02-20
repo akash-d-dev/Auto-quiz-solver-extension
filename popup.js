@@ -18,71 +18,59 @@ class QuizSolver {
     this.kalviApiToken = '';
   }
 
+  createButton(text, bgColor, margin, onClick) {
+    const btn = Object.assign(document.createElement('button'), {
+      textContent: text,
+      style: `margin: ${margin}; padding: 8px 16px; background: ${bgColor}; color: #fff; border: none; border-radius: 4px; cursor: pointer;`,
+    });
+    btn.addEventListener('click', onClick);
+    return btn;
+  }
+
   createModalWindow() {
-    this.modal = document.createElement('div');
-    this.modal.style.position = 'fixed';
-    this.modal.style.top = '50px';
-    this.modal.style.right = '20px';
-    this.modal.style.backgroundColor = '#fff';
-    this.modal.style.padding = '20px';
-    this.modal.style.borderRadius = '8px';
-    this.modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
-    this.modal.style.width = 'auto';
-    this.modal.style.height = 'auto';
-    this.modal.style.maxHeight = '400px';
-    this.modal.style.overflowY = 'auto';
-    this.modal.style.zIndex = '10000';
+    this.modal = Object.assign(document.createElement('div'), {
+      style: `
+            position: fixed; top: 50px; right: 20px; background: #fff; padding: 20px;
+            border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: auto; height: auto; max-height: 400px; overflow-y: auto; z-index: 10000;
+        `,
+    });
 
-    this.modalContent = document.createElement('div');
-    this.modalContent.style.marginBottom = '10px';
-    this.modalContent.id = 'modal-content';
+    this.modalContent = Object.assign(document.createElement('div'), {
+      id: 'modal-content',
+      style: 'margin-bottom: 10px;',
+    });
 
-    this.toggleModalBtn = document.createElement('button');
-    this.toggleModalBtn.textContent = 'Click';
-    this.toggleModalBtn.style.marginRight = '10px';
-    this.toggleModalBtn.style.padding = '8px 16px';
-    this.toggleModalBtn.style.backgroundColor = '#007bff';
-    this.toggleModalBtn.style.color = '#fff';
-    this.toggleModalBtn.style.border = 'none';
-    this.toggleModalBtn.style.borderRadius = '4px';
-    this.toggleModalBtn.style.cursor = 'pointer';
-
-    this.closeModelBtn = document.createElement('button');
-    this.closeModelBtn.textContent = 'Close';
-    this.closeModelBtn.style.marginLeft = '10px';
-    this.closeModelBtn.style.padding = '8px 16px';
-    this.closeModelBtn.style.backgroundColor = 'red';
-    this.closeModelBtn.style.color = '#fff';
-    this.closeModelBtn.style.border = 'none';
-    this.closeModelBtn.style.borderRadius = '4px';
-    this.closeModelBtn.style.cursor = 'pointer';
-
-    // Append elements
-    this.modal.appendChild(this.modalContent);
-    this.modal.appendChild(this.toggleModalBtn);
-    this.modal.appendChild(this.closeModelBtn);
-    document.body.appendChild(this.modal);
-
-    this.toggleModalBtn.addEventListener('click', () => {
-      if (this.modalContent.innerHTML !== '') {
-        this.modalContent.innerHTML = '';
-      } else {
-        this.toggleModalWindow();
+    this.toggleModalBtn = this.createButton(
+      'Click',
+      '#007bff',
+      '0 10px 0 0',
+      () => {
+        if (this.modalContent.innerHTML) {
+          this.modalContent.innerHTML = ''; // Clear content
+        } else {
+          this.toggleModalWindow(); // Call function
+        }
       }
-    });
+    );
 
-    this.closeModelBtn.addEventListener('click', () => {
-      this.removeModalWindow();
-    });
+    this.closeModelBtn = this.createButton('Close', 'red', '0 0 0 10px', () =>
+      this.removeModalWindow()
+    );
+
+    [this.modalContent, this.toggleModalBtn, this.closeModelBtn].forEach((el) =>
+      this.modal.appendChild(el)
+    );
+    document.body.appendChild(this.modal);
   }
 
   toggleModalWindow() {
     const modalContent = document.getElementById('modal-content');
     const updatedAnsArray = this.ansArray.map((ans) => ans + 1);
 
-    const ansToDisplay = updatedAnsArray.map((ans, idx) => {
-      return `Q${idx + 1}: ${ans}`;
-    });
+    const ansToDisplay = updatedAnsArray.map(
+      (ans, idx) => `Q${idx + 1}: ${ans}`
+    );
 
     modalContent.innerHTML = `<h3>Quiz Answers</h3><pre>${JSON.stringify(
       ansToDisplay,
@@ -92,8 +80,7 @@ class QuizSolver {
   }
 
   removeModalWindow() {
-    this.modal.remove();
-    this.modal = null;
+    this.modal?.remove();
   }
 
   getAutoStart() {
@@ -390,6 +377,7 @@ class QuizSolver {
       : setTimeout(() => {
           this.init();
         }, this.delay * 1000);
+
     console.log('Foreground script running');
     console.log('Dealy: ', this.delay);
     console.log('Auto Start: ', this.autoStart === '1' ? 'Yes' : 'No');
