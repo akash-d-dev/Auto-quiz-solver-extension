@@ -159,24 +159,20 @@ class QuizSolver {
     console.log('Starting to get answers from ai');
     const background = document.getElementsByClassName('css-1t3n037')[0];
     try {
-      let keyToUse =
-        this.AI_MODEL === 'gpt-3.5-turbo' ||
-        this.AI_MODEL === 'chatgpt-4o-latest'
-          ? this.C_API_KEY
-          : this.G_API_KEY;
+      const isGPTModel = ['gpt-3.5-turbo', 'chatgpt-4o-latest'].includes(
+        this.AI_MODEL
+      );
 
-      if (keyToUse === 'null') {
+      const { keyToUse, modelToUse } = isGPTModel
+        ? { keyToUse: this.C_API_KEY, modelToUse: 'gpt' }
+        : { keyToUse: this.G_API_KEY, modelToUse: 'gemini' };
+
+      if (!keyToUse || keyToUse === 'null') {
         throw new Error('API Key not provided');
       }
 
-      let modelToUse =
-        this.AI_MODEL === 'gpt-3.5-turbo' ||
-        this.AI_MODEL === 'chatgpt-4o-latest'
-          ? 'gpt'
-          : 'gemini';
-
-      console.log('Key Used: ', keyToUse);
-      console.log('Model Used: ', modelToUse);
+      console.log(`Key Used: ${keyToUse}`);
+      console.log(`Model Used: ${modelToUse}`);
       console.log('Getting...');
 
       const response = await fetch(QuizSolver.apiUrl, {
