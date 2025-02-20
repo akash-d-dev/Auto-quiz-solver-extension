@@ -1,5 +1,6 @@
 class QuizSolver {
   static apiUrl = 'https://k-quiz-solver-api.onrender.com';
+  // static apiUrl = 'http://localhost:8000';
 
   constructor() {
     this.ansArray = [-1, -1, -1, -1, -1];
@@ -17,20 +18,18 @@ class QuizSolver {
     this.kalviApiToken = '';
   }
 
-  // const apiUrl = 'http://localhost:8000';
-
   createModalWindow() {
     this.modal = document.createElement('div');
     this.modal.style.position = 'fixed';
-    this.modal.style.top = '50px'; // Position at top right corner
+    this.modal.style.top = '50px';
     this.modal.style.right = '20px';
     this.modal.style.backgroundColor = '#fff';
     this.modal.style.padding = '20px';
     this.modal.style.borderRadius = '8px';
     this.modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
-    this.modal.style.width = 'auto'; // Adjust width as needed
-    this.modal.style.height = 'auto'; // Adjust height as needed
-    this.modal.style.maxHeight = '400px'; // Adjust height as needed
+    this.modal.style.width = 'auto';
+    this.modal.style.height = 'auto';
+    this.modal.style.maxHeight = '400px';
     this.modal.style.overflowY = 'auto';
     this.modal.style.zIndex = '10000';
 
@@ -239,14 +238,13 @@ class QuizSolver {
     if (retryBtn) {
       if (this.modal !== null) this.removeModalWindow();
     }
+
     const { token } = await new Promise((resolve) => {
       chrome.storage.sync.get(['token'], (data) => {
         resolve(data);
       });
     });
-
     const currentTabUrl = window.location.href;
-
     const regex = /https:\/\/kalvium\.community\/quiz\/[^\/]+$/;
 
     if (regex.test(currentTabUrl)) {
@@ -255,13 +253,16 @@ class QuizSolver {
         .pop()}/attempts`;
 
       let userToken = this.kalviApiToken ? this.kalviApiToken : token.value;
+
       console.log('##################################');
-      console.log('Using curr token:', userToken === token.value),
-        console.log('##################################');
+      console.log('Using saved token:', !userToken === token.value);
+      console.log('##################################');
+
       console.log('##################################');
       console.log(' kalviApiToken: ');
       console.log(this.kalviApiToken);
       console.log('##################################');
+
       console.log('##################################');
       console.log('Curr Token: ');
       console.log(token.value);
@@ -350,10 +351,12 @@ class QuizSolver {
   async runScript() {
     this.autoStart = await this.getAutoStart();
     this.AI_MODEL = await this.getAiModel();
-    console.log('getAiModel: ', this.AI_MODEL);
     this.delay = await this.getWaitFor();
     this.kalviApiToken = await this.getKalviApiToken();
+
+    console.log('getAiModel: ', this.AI_MODEL);
     console.log('Existing KalviApiToken: ', this.kalviApiToken ? true : false);
+
     if (this.C_API_KEY === '' || !this.C_API_KEY) {
       this.C_API_KEY = String(prompt('Please enter your OpenAi API Key'));
       localStorage.setItem('C_API_KEY', this.C_API_KEY);
@@ -366,6 +369,7 @@ class QuizSolver {
             this.init();
           }, this.delay * 1000);
     }
+
     if (this.G_API_KEY === '' || !this.G_API_KEY) {
       this.G_API_KEY = String(prompt('Please enter your Google API Key'));
       localStorage.setItem('G_API_KEY', this.G_API_KEY);
