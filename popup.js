@@ -1,6 +1,6 @@
 class QuizSolver {
-  // static apiUrl = 'https://k-quiz-solver-api.onrender.com'
-  static apiUrl = 'http://localhost:8000';
+  static apiUrl = 'https://k-quiz-solver-api.onrender.com'
+  // static apiUrl = 'http://localhost:8000';
 
   constructor() {
     this.ansArray = [-1, -1, -1, -1, -1]
@@ -402,41 +402,3 @@ class QuizSolver {
 
 const quizSolver = new QuizSolver()
 quizSolver.runScript()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-fetch("https://k-quiz-solver-api.onrender.com/", {
-  "headers": {
-    "accept": "*/*",
-    "accept-language": "en-US,en;q=0.5",
-    "content-type": "application/json",
-    "key": "GROK_API_KEY",
-    "model": "grok-2-latest",
-    "model_type": "grok",
-    "priority": "u=1, i",
-    "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Brave\";v=\"133\", \"Chromium\";v=\"133\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Windows\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "cross-site",
-    "sec-gpc": "1",
-    "Referer": "https://kalvium.community/",
-    "Referrer-Policy": "strict-origin-when-cross-origin"
-  },
-  "body": "[{\"question\":\"Please identify whether the following sentence is an example for irony or pun.\\r\\n\\r\\n\\\"Reading while sunbathing makes you well-red.\\\"\",\"question_number\":0,\"options\":[{\"content\":\"Irony\",\"option_number\":0},{\"content\":\"Pun\",\"option_number\":1},{\"content\":\"Neither of the two\",\"option_number\":2}]},{\"question\":\"Please identify whether the following sentence is an example for irony or pun.\\r\\n\\r\\n\\\"I know a guy who's addicted to brake fluid, but he says he can stop at any time.\\\"\",\"question_number\":1,\"options\":[{\"content\":\"Irony\",\"option_number\":0},{\"content\":\"Pun\",\"option_number\":1},{\"content\":\"Neither of the two\",\"option_number\":2}]},{\"question\":\"Please identify whether the following sentence is an example for irony or pun.\\r\\n\\r\\n\\\"The locksmith got locked out of his house.\\\"\",\"question_number\":2,\"options\":[{\"content\":\"Irony\",\"option_number\":0},{\"content\":\"Pun\",\"option_number\":1},{\"content\":\"Neither of the two\",\"option_number\":2}]},{\"question\":\"Please identify whether the following sentence is an example for irony or pun.\\r\\n\\r\\n\\\"Water water everywhere, not a drop to drink.\\\"\",\"question_number\":3,\"options\":[{\"content\":\"Irony\",\"option_number\":0},{\"content\":\"Pun\",\"option_number\":1},{\"content\":\"Neither of the two\",\"option_number\":2}]},{\"question\":\"Please identify whether the following sentence is an example for irony or pun.\\r\\n\\r\\n\\\"The electrician couldn’t fix the problem because he was shocked at what he found.\\\"\",\"question_number\":4,\"options\":[{\"content\":\"Irony\",\"option_number\":0},{\"content\":\"Pun\",\"option_number\":1},{\"content\":\"Neither of the two\",\"option_number\":2}]}]",
-  "method": "POST"
-});
