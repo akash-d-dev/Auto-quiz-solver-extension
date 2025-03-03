@@ -167,7 +167,7 @@ class QuizSolver {
 
   async getQuizAnswers(qna) {
     console.log('Starting to get answers from ai')
-    const background = document.getElementsByClassName('css-1t3n037')[0]
+    const background = document.getElementsByClassName('css-1t3n037')[0] || null
     try {
       const AI_MODELS = {
         gpt: ['chatgpt-4o-latest', 'gpt-3.5-turbo'],
@@ -234,13 +234,13 @@ class QuizSolver {
             throw new Error('Failed to fetch all answers')
           }
         })
-        background.style.backgroundColor = '#ecffec'
+        if (background) background.style.backgroundColor = '#ecffec'
         return this.ansArray
       } else {
         throw new Error('Failed to fetch quiz')
       }
     } catch (error) {
-      background.style.backgroundColor = '#ff605f'
+      if (background)  background.style.backgroundColor = '#ff605f'
       console.error(error)
       console.error('Sorry we failed')
       throw error
@@ -292,7 +292,7 @@ class QuizSolver {
       console.log(token.value)
       console.log('##################################')
 
-      const background = document.getElementsByClassName('css-1t3n037')[0]
+      const background = document.getElementsByClassName('css-1t3n037')[0] || null
       const qNum = document.getElementsByClassName('chakra-text css-itr5sx')[0]
 
       if (background) background.style.backgroundColor = '#fbfac0'
@@ -319,7 +319,7 @@ class QuizSolver {
         this.ansData = await this.getQuizAnswers(qna)
         this.startSolvingQuiz()
       } catch (error) {
-        background.style.backgroundColor = '#ff605f'
+        if (background)  background.style.backgroundColor = '#ff605f'
         if (!retryBtn) {
           const button = document.createElement('button')
           button.className = 'chakra-button css-fgqgi2'
