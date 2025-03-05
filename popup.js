@@ -130,7 +130,7 @@ class QuizSolver {
   }
 
   startSolvingQuiz() {
-    if (this.currentQuestion === 5) {
+    if (this.currentQuestion === this.ansData.length) {
       this.currentQuestion = 0
       console.log('All questions answered')
       // removeModalWindow();
@@ -227,8 +227,8 @@ class QuizSolver {
         } catch (error) {
           throw new Error('AI API failed to fetch answers')
         }
-        if (this.ansArray.length !== 5)
-          throw new Error('Failed to fetch all answers')
+        // if (this.ansArray.length !== 5)
+        //   throw new Error('Failed to fetch all answers')
         this.ansArray.map((ans) => {
           if (ans === -1) {
             throw new Error('Failed to fetch all answers')
