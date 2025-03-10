@@ -19,18 +19,22 @@ class QuizSolver {
     this.kalviApiToken = ''
   }
 
-  reset() {
+  async reset() {
     this.ansArray = [-1, -1, -1, -1, -1];
     this.ansData = [null, null, null, null, null];
     this.currentQuestion = 0;
     this.G_API_KEY = localStorage.getItem('G_API_KEY') || '';
     this.C_API_KEY = localStorage.getItem('C_API_KEY') || '';
     this.X_API_KEY = localStorage.getItem('X_API_KEY') || '';
-    this.AI_MODEL = 'gemini-1.5-pro';
+    this.AI_MODEL = 'gemini-1.5-pro'
     this.modal = null;
     this.modalContent = undefined;
     this.toggleModalBtn = undefined;
     this.closeModelBtn = undefined;
+    this.kalviApiToken = ''
+
+    this.AI_MODEL = await this.getAiModel()
+    this.kalviApiToken = await this.getKalviApiToken()
 }
 
   createButton(text, bgColor, margin, onClick) {
