@@ -17,9 +17,21 @@ class QuizSolver {
     this.toggleModalBtn
     this.closeModelBtn
     this.kalviApiToken = ''
-
-    console.log(this.X_API_KEY)
   }
+
+  reset() {
+    this.ansArray = [-1, -1, -1, -1, -1];
+    this.ansData = [null, null, null, null, null];
+    this.currentQuestion = 0;
+    this.G_API_KEY = localStorage.getItem('G_API_KEY') || '';
+    this.C_API_KEY = localStorage.getItem('C_API_KEY') || '';
+    this.X_API_KEY = localStorage.getItem('X_API_KEY') || '';
+    this.AI_MODEL = 'gemini-1.5-pro';
+    this.modal = null;
+    this.modalContent = undefined;
+    this.toggleModalBtn = undefined;
+    this.closeModelBtn = undefined;
+}
 
   createButton(text, bgColor, margin, onClick) {
     const btn = Object.assign(document.createElement('button'), {
@@ -327,6 +339,7 @@ class QuizSolver {
           button.style.marginLeft = '16px'
           button.style.backgroundColor = 'green'
           button.addEventListener('click', () => {
+            this.reset()
             this.main(qna, true)
           })
           qNum.appendChild(button)
