@@ -2,7 +2,7 @@
   "name": "Kalvium Auto Quiz",
   "version": "1.0.0",
   "manifest_version": 3,
-  "description": "Fuck quiz",
+  "description": "Let's solve the dam quiz",
   "permissions": [
     "cookies",
     "activeTab",
@@ -24,7 +24,7 @@
   "content_scripts": [
     {
       "matches": ["https://kalvium.community/livebooks/*"],
-      "js":  ["popup.js"]
+      "js":  ["script.js"]
     }
   ],
   "host_permissions": [
