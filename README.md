@@ -1,5 +1,7 @@
-Still solving your quiz manually? 
+More than 10 people are using this, but no one has left a star 😩... Please be responsible and leave a star 😅
 
-Use this extension, it will solve your Kalvium community quizes automatically(just keep your api keys ready) 😁
+Still solving your quizzes manually?
+
+Use this extension to solve your Kalvium community quizzes automatically (just make sure to keep your API keys ready) 😁
 
 API Source Code - https://github.com/akash-d-dev/auto-quiz-solver-api
