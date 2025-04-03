@@ -61,13 +61,14 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 ### 🔹 **What Do Different Page Background Colors Indicate?**
 - 🟡 **Yellow**: The extension is retrieving answers from the backend (loading indicator).
 - 🔴 **Red**: Failed to fetch answers.
+- 🟢 **Green**: Answers have been fetched and now the extension has started solving the quiz.
 
 ### 🔹 **How to Reset or Change API Keys?**
 1. Open **kalvium.community**.
 2. Go to **LocalStorage**.
 3. Modify or reset your API keys from there.
 
-### 🔹 **Why Did the Quiz Fail to Solve?**
+### 🔹 **Why Did the Extension Fail to Solve the Quiz?**
 A failure can happen due to:
 - Invalid or expired **API keys** (Check if your API key has reached its limit or is incorrect).
 - Wrong or expired **access token**.
