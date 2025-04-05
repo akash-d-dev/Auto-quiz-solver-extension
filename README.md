@@ -27,7 +27,7 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 2. A popup will appear asking for your LLM API keys.
    - Provide your API keys.
    - If you want to skip any key, just press cancel (Make sure at least one LLM key is provided).
-3. Open any quiz page on **kalvium.community** in a new tab (or refresh the page).
+3. Open any module page on **kalvium.community**(which has quiz) in a new tab (or refresh the page).
 4. Wait for the **"Mark as Done"** button to turn green, then click it.
 5. The extension will handle the rest! ✅
 
