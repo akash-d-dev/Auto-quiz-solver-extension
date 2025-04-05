@@ -27,7 +27,7 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 2. A popup will appear asking for your LLM API keys.
    - Provide your API keys.
    - If you want to skip any key, just press cancel (Make sure at least one LLM key is provided).
-3. Open any module page on **kalvium.community**(which has quiz) in a new tab (or refresh the page).
+3. Open any module page on **kalvium.community**(which has a quiz) in a new tab (or refresh the page).
 4. Wait for the **"Mark as Done"** button to turn green, then click it.
 5. The extension will handle the rest! ✅
 
@@ -53,7 +53,7 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 ### 🔹 **How to Prevent the Quiz from Opening in Fullscreen?**
 - We are **exploiting a bug** to prevent full-page mode:
   1. Turn on **Auto Start**.
-  2. Open the **module page(s)** in a new tab.
+  2. Open the **module page(s)** in a new tab and do not go to that tab.
   3. Wait until the quiz page for that module is opened.
   4. When you open your quiz page, it will not go fullscreen.
   - (*Recommended wait time: Delay + 5-10 seconds*)
@@ -64,7 +64,7 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 - 🟢 **Green**: Answers have been fetched and now the extension has started solving the quiz.
 
 ### 🔹 **How to Reset or Change API Keys?**
-1. Open **kalvium.community**.
+1. Open **kalvium.community** and do **Inspect**.
 2. Go to **LocalStorage**.
 3. Modify or reset your API keys from there.
 
