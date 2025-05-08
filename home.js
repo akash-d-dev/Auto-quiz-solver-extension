@@ -1,7 +1,7 @@
 console.log('home script running');
 
 let autoStart = '0';
-let aiModel = 'gemini-1.5-pro';
+let aiModel = 'gemini-2.0-flash-lite';
 
 document.addEventListener('DOMContentLoaded', function () {
   const autoStartElement = document.getElementById('auto-start');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   chrome.storage.sync.get('aiModel', function (data) {
-    let aiModel = data.aiModel || 'gemini-1.5-pro';
+    let aiModel = data.aiModel || 'gemini-2.0-flash-lite';
     aiModelElement.value = aiModel;
   });
   aiModelElement.addEventListener('change', function () {

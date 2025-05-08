@@ -11,7 +11,7 @@ class QuizSolver {
     this.X_API_KEY = localStorage.getItem('X_API_KEY') || ''
     this.delay = 8
     this.autoStart = '0'
-    this.AI_MODEL = 'gemini-1.5-pro'
+    this.AI_MODEL = 'gemini-2.0-flash-lite'
     this.modal = null
     this.modalContent
     this.toggleModalBtn
@@ -26,7 +26,7 @@ class QuizSolver {
     this.G_API_KEY = localStorage.getItem('G_API_KEY') || '';
     this.C_API_KEY = localStorage.getItem('C_API_KEY') || '';
     this.X_API_KEY = localStorage.getItem('X_API_KEY') || '';
-    this.AI_MODEL = 'gemini-1.5-pro'
+    this.AI_MODEL = 'gemini-2.0-flash-lite'
     this.modal = null;
     this.modalContent = undefined;
     this.toggleModalBtn = undefined;
@@ -121,7 +121,7 @@ class QuizSolver {
   getAiModel() {
     return new Promise((resolve) => {
       chrome.storage.sync.get('aiModel', function (data) {
-        const aiModel = data.aiModel || 'gemini-1.5-pro'
+        const aiModel = data.aiModel || 'gemini-2.0-flash-lite'
         resolve(aiModel)
       })
     })
@@ -187,7 +187,7 @@ class QuizSolver {
     try {
       const AI_MODELS = {
         gpt: ['chatgpt-4o-latest', 'gpt-3.5-turbo'],
-        gemini: ['gemini-1.5-pro', 'gemini-1.0-pro'],
+        gemini: ['gemini-2.0-flash-lite', 'gemini-2.0-flash'],
         grok: ['grok-2-latest']
       }
 
