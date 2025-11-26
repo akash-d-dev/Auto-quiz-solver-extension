@@ -21,9 +21,24 @@ class QuizSolver {
   }
 
   async syncKeysFromChromeStorage() {
+    if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
+      console.log('Chrome storage API not available, skipping sync');
+      return;
+    }
+    
     try {
-      const keys = await new Promise((resolve) => {
-        chrome.storage.local.get(['C_API_KEY', 'G_API_KEY', 'X_API_KEY'], resolve);
+      const keys = await new Promise((resolve, reject) => {
+        try {
+          chrome.storage.local.get(['C_API_KEY', 'G_API_KEY', 'X_API_KEY'], (result) => {
+            if (chrome.runtime.lastError) {
+              reject(chrome.runtime.lastError);
+            } else {
+              resolve(result);
+            }
+          });
+        } catch (err) {
+          reject(err);
+        }
       });
       
       if (keys.C_API_KEY && keys.C_API_KEY !== this.C_API_KEY) {
@@ -39,7 +54,7 @@ class QuizSolver {
         localStorage.setItem('X_API_KEY', this.X_API_KEY);
       }
     } catch (error) {
-      console.log('Could not sync keys from chrome.storage.local:', error);
+      console.log('Could not sync keys from chrome.storage.local:', error.message || error);
     }
   }
 
@@ -135,28 +150,70 @@ class QuizSolver {
 
   getAutoStart() {
     return new Promise((resolve) => {
-      chrome.storage.sync.get('autoStart', function (data) {
-        const autoStart = data.autoStart || '0'
-        resolve(autoStart)
-      })
+      if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.sync) {
+        resolve('0');
+        return;
+      }
+      try {
+        chrome.storage.sync.get('autoStart', function (data) {
+          if (chrome.runtime.lastError) {
+            console.log('Error getting autoStart:', chrome.runtime.lastError);
+            resolve('0');
+          } else {
+            const autoStart = data.autoStart || '0';
+            resolve(autoStart);
+          }
+        });
+      } catch (error) {
+        console.log('Exception getting autoStart:', error);
+        resolve('0');
+      }
     })
   }
 
   getAiModel() {
     return new Promise((resolve) => {
-      chrome.storage.sync.get('aiModel', function (data) {
-        const aiModel = data.aiModel || 'gemini-2.5-flash'
-        resolve(aiModel)
-      })
+      if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.sync) {
+        resolve('gemini-2.5-flash');
+        return;
+      }
+      try {
+        chrome.storage.sync.get('aiModel', function (data) {
+          if (chrome.runtime.lastError) {
+            console.log('Error getting aiModel:', chrome.runtime.lastError);
+            resolve('gemini-2.5-flash');
+          } else {
+            const aiModel = data.aiModel || 'gemini-2.5-flash';
+            resolve(aiModel);
+          }
+        });
+      } catch (error) {
+        console.log('Exception getting aiModel:', error);
+        resolve('gemini-2.5-flash');
+      }
     })
   }
 
   getWaitFor() {
     return new Promise((resolve) => {
-      chrome.storage.sync.get('delay', function (data) {
-        const delay = data.delay || 8
-        resolve(delay)
-      })
+      if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.sync) {
+        resolve(30);
+        return;
+      }
+      try {
+        chrome.storage.sync.get('delay', function (data) {
+          if (chrome.runtime.lastError) {
+            console.log('Error getting delay:', chrome.runtime.lastError);
+            resolve(30);
+          } else {
+            const delay = data.delay || 30;
+            resolve(delay);
+          }
+        });
+      } catch (error) {
+        console.log('Exception getting delay:', error);
+        resolve(30);
+      }
     })
   }
 
@@ -620,10 +677,84 @@ class QuizSolver {
       .catch(err => console.log('Server wake-up failed (non-critical):', err));
   }
 
+  setupURLChangeDetection() {
+    let lastUrl = window.location.href;
+    console.log('Setting up URL change detection for SPA navigation');
+
+    const checkUrlChange = () => {
+      const currentUrl = window.location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        this.handleUrlChange(currentUrl);
+      }
+    };
+    const observer = new MutationObserver(() => {
+      checkUrlChange();
+    });
+
+    if (document.body) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      });
+    }
+  }
+
+  handleUrlChange(url) {
+    const lessonsRegex = /\/livebooks\/\d+\/[a-f0-9-]+\/lessons$/;
+    
+    if (lessonsRegex.test(url)) {
+      console.log('Quiz page detected via URL change. Reinitializing...');
+      setTimeout(() => {
+        this.reinitialize();
+      }, 500);
+    } else {
+      console.log('Not a quiz page URL. Skipping initialization.');
+    }
+  }
+
+  async reinitialize() {
+    console.log('Reinitializing extension for new quiz page...');
+    
+    await this.reset();
+    
+    const lessonsRegex = /\/livebooks\/\d+\/[a-f0-9-]+\/lessons$/;
+    if (!lessonsRegex.test(window.location.href)) {
+      console.log('URL validation failed during reinitialization.');
+      return;
+    }
+
+    this.autoStart = await this.getAutoStart();
+    this.AI_MODEL = await this.getAiModel();
+
+    if (this.autoStart === '1') {
+      console.log('Auto-start enabled. Waiting for Start Quiz button...');
+      const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
+      if (startBtn) {
+        console.log('Start Quiz button detected. Auto-clicking...');
+        this.start(true);
+      } else {
+        console.log('Start Quiz button not found within timeout.');
+      }
+    } else {
+      await this.init();
+    }
+
+    console.log('Reinitialization complete');
+    console.log('Auto Start:', this.autoStart === '1' ? 'Yes' : 'No');
+    console.log('AI Model:', this.AI_MODEL);
+  }
+
   async runScript() {
     console.log('Running auto quiz solver')
 
-    // Inject Interceptor via SRC (Bypasses CSP for inline scripts)
     const script = document.createElement('script');
     script.src = chrome.runtime.getURL('interceptor.js');
     script.onload = function() {
@@ -636,7 +767,7 @@ class QuizSolver {
     window.addEventListener('message', (event) => {
         if (event.source !== window) return;
         if (event.data.type && event.data.type === 'QUIZ_DATA_INTERCEPTED') {
-            console.log("Content Script: Received data from", event.data.source);
+            // console.log("Content Script: Received data from", event.data.source);
             
             let rawData = event.data.data;
             let qna = null;
@@ -675,7 +806,7 @@ class QuizSolver {
 
             if (qna) {
                 this.quizData = qna;
-                console.log("Quiz data stored. Ready to solve.");
+                // console.log("Quiz data stored. Ready to solve.");
             }
         }
     });
@@ -759,4 +890,8 @@ class QuizSolver {
 
 console.log('Background script running')
 const quizSolver = new QuizSolver()
+
+// Set up URL change detection IMMEDIATELY before React Router initializes
+quizSolver.setupURLChangeDetection();
+
 quizSolver.runScript()
