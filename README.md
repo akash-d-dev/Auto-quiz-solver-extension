@@ -70,12 +70,13 @@ You can switch between models anytime in the extension popup.
 
 ### 🔹 **What is Fullscreen Bypass?**
 The quiz website normally enforces fullscreen mode and pauses when you switch tabs or lose focus. This extension exploits a bug to bypass these restrictions.
+<img width="2529" height="1349" alt="image" src="https://github.com/user-attachments/assets/9c6b09ce-cc67-41ac-894f-e41d88db9865" />
 
 **How it works:**
 1. Extension clicks "Start Quiz" for you
-2. Immediately switches to a temporary blank tab
+2. Immediately switches to a temporary blank tab or switches to an already opened tab
 3. Quiz starts in the background (website doesn't detect the switch)
-4. Returns to quiz tab after 2 seconds
+4. Returns to quiz tab after a few seconds
 5. Quiz is running without fullscreen restrictions!
 
 **Settings:**
@@ -175,5 +176,6 @@ Common errors:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
 
 
