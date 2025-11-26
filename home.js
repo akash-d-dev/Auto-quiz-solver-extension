@@ -102,6 +102,7 @@ function saveApiKey(keyName, inputElement, statusElement) {
 document.addEventListener('DOMContentLoaded', function () {
   const autoStartElement = document.getElementById('auto-start');
   const aiModelElement = document.getElementById('ai-model');
+  const bypassFullscreenElement = document.getElementById('bypass-fullscreen');
 
   chrome.storage.sync.get('autoStart', function (data) {
     autoStart = data.autoStart || '0';
@@ -119,6 +120,15 @@ document.addEventListener('DOMContentLoaded', function () {
   aiModelElement.addEventListener('change', function () {
     let aiModel = aiModelElement.value;
     chrome.storage.sync.set({ aiModel: aiModel });
+  });
+
+  chrome.storage.sync.get('bypassFullscreen', function (data) {
+    let bypassFullscreen = data.bypassFullscreen || '1';
+    bypassFullscreenElement.value = bypassFullscreen;
+  });
+  bypassFullscreenElement.addEventListener('change', function () {
+    let bypassFullscreen = bypassFullscreenElement.value;
+    chrome.storage.sync.set({ bypassFullscreen: bypassFullscreen });
   });
 
   loadApiKeysFromStorage();

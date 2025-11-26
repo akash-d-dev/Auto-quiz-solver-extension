@@ -39,8 +39,10 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 #### **Using the Extension:**
 1. Navigate to any quiz module page on **kalvium.community**.
 2. The extension automatically detects quiz pages - **no manual refresh needed!**
-3. The **"Start Quiz"** button will turn **green** when ready.
+3. The **"Start Quiz"** or **"Retake Quiz"** button will turn **green** when ready.
 4. Click the green button, and the extension handles the rest! ✅
+
+**Note:** The extension works for both first attempts and retakes - it automatically detects which button is present!
 
 #### **Auto Start Mode:**
 - Enable "Auto Start" in the extension popup to automatically start quizzes.
@@ -65,6 +67,27 @@ You can switch between models anytime in the extension popup.
 - **Off**: The "Start Quiz" button turns green, but you need to click it manually.
   - Gives you control over when to start.
 <img width="1218" height="498" alt="image" src="https://github.com/user-attachments/assets/c4cc67f3-cba0-497a-8f4c-3e05d794c924" />
+
+### 🔹 **What is Fullscreen Bypass?**
+The quiz website normally enforces fullscreen mode and pauses when you switch tabs or lose focus. This extension exploits a bug to bypass these restrictions.
+
+**How it works:**
+1. Extension clicks "Start Quiz" for you
+2. Immediately switches to a temporary blank tab
+3. Quiz starts in the background (website doesn't detect the switch)
+4. Returns to quiz tab after 2 seconds
+5. Quiz is running without fullscreen restrictions!
+
+**Settings:**
+- **On (Recommended)**: Automatically bypasses fullscreen when Auto Start is enabled.
+- **Off**: Normal behavior - fullscreen enforcement remains active.
+
+**Benefits:**
+- ✅ No fullscreen mode
+- ✅ Can switch tabs freely
+- ✅ Console stays accessible
+- ✅ Multi-monitor setup works perfectly
+- ✅ Can copy questions/answers easily
 
 ### 🔹 **How to Manage API Keys?**
 1. Click the extension icon in your browser toolbar.
@@ -104,11 +127,16 @@ Common errors:
 **No!** The extension automatically detects when you navigate to a quiz page using smart URL detection. Just click on quiz modules normally, and the extension activates instantly.
 
 ### 🔹 **How to Prevent Fullscreen Mode?**
-Use the Auto Start feature:
-1. Enable **Auto Start** in the extension popup.
-2. Open quiz module pages in background tabs (don't switch to them immediately).
-3. The extension will start the quiz automatically in the background.
-4. When you switch to the tab, the quiz won't go fullscreen.
+**Method 1: Use Fullscreen Bypass (Recommended)**
+1. Enable **Fullscreen Bypass** in the extension popup (On by default).
+2. Enable **Auto Start**.
+3. Navigate to any quiz page - the extension handles everything automatically!
+
+**Method 2: Manual Background Loading**
+1. Open quiz module pages in background tabs (Ctrl+Click or Middle Mouse).
+2. Don't switch to them immediately.
+3. Wait 5-10 seconds for the quiz to load.
+4. Switch to the tab - quiz is running without fullscreen mode!
 
 ---
 
@@ -143,6 +171,7 @@ Use the Auto Start feature:
 ✅ Multiple AI model support (Gemini, GPT, Grok)  
 ✅ Detailed error messages with retry option  
 ✅ Auto Start mode for batch processing  
+✅ Fullscreen bypass exploit (no restrictions!)  
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉

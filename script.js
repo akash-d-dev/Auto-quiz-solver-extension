@@ -270,11 +270,21 @@ class QuizSolver {
     }, 1000)
   }
 
-  //Deal with warning popup
-  handlePopup() {
-    // Try to find the "Proceed" or close button in popup
+  async handlePopup() {
+    console.log('Checking for popup confirmation...');
     const closeBtn = this.findButtonByText(['Proceed', 'Close', 'Yes']);
-    if (closeBtn) closeBtn.click()
+    if (closeBtn) {
+      console.log('Found popup button, clicking it...');
+      closeBtn.click();
+      
+      console.log('Popup clicked! Quiz is about to start. Activating fullscreen bypass...');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await this.exploitFullscreenBypass();
+    } else {
+      console.log('No popup found, quiz may already be active');
+      await this.exploitFullscreenBypass();
+    }
+    
     setTimeout(() => {
       this.main()
     }, 1500)
@@ -540,21 +550,87 @@ class QuizSolver {
       }
   }
 
-  start(clickButton = true) {
+  getBypassFullscreen() {
+    return new Promise((resolve) => {
+      if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.sync) {
+        resolve('1');
+        return;
+      }
+      try {
+        chrome.storage.sync.get('bypassFullscreen', function (data) {
+          if (chrome.runtime.lastError) {
+            console.log('Error getting bypassFullscreen:', chrome.runtime.lastError);
+            resolve('1');
+          } else {
+            const bypassFullscreen = data.bypassFullscreen || '1';
+            resolve(bypassFullscreen);
+          }
+        });
+      } catch (error) {
+        console.log('Exception getting bypassFullscreen:', error);
+        resolve('1');
+      }
+    });
+  }
+
+  async exploitFullscreenBypass() {
+    const bypassEnabled = await this.getBypassFullscreen();
+    
+    if (bypassEnabled !== '1') {
+      console.log('Fullscreen bypass is disabled in settings');
+      return false;
+    }
+
+    console.log('🔓 Activating fullscreen bypass exploit...');
+    console.log('Step 1: Sending message to background script...');
+    
+    try {
+      if (typeof chrome === 'undefined' || !chrome.runtime || !chrome.runtime.sendMessage) {
+        console.log('⚠️ Chrome runtime not available, bypass skipped');
+        return false;
+      }
+
+      const response = await chrome.runtime.sendMessage({ 
+        action: 'bypassFullscreen'
+      });
+      
+      console.log('Step 2: Received response from background:', response);
+      
+      if (response && response.success) {
+        console.log('✅ Fullscreen bypass successful! Quiz running without restrictions.');
+        return true;
+      } else {
+        console.log('❌ Fullscreen bypass failed:', response ? response.error : 'No response');
+        return false;
+      }
+    } catch (error) {
+      if (error.message && error.message.includes('Extension context invalidated')) {
+        console.log('⚠️ Extension was reloaded. Bypass skipped. Reload the page to use bypass.');
+      } else {
+        console.log('❌ Fullscreen bypass error:', error.message || error);
+      }
+      return false;
+    }
+  }
+
+  async start(clickButton = true) {
     console.log('Starting quiz sequence...')
+    
     if (clickButton) {
-        const startBtn = this.findButtonByText(['Start Quiz']);
-        if (startBtn) {
-            console.log('Auto-clicking Start Quiz button');
-            startBtn.click();
+        const quizBtn = this.findButtonByText(['Start Quiz', 'Retake Quiz']);
+        if (quizBtn) {
+            const buttonText = quizBtn.textContent.trim();
+            console.log(`Auto-clicking ${buttonText} button`);
+            quizBtn.click();
         } else {
-            console.log("Start Quiz button not found for auto-start");
+            console.log("Start Quiz or Retake Quiz button not found for auto-start");
         }
     }
     
-    setTimeout(() => {
-      this.handlePopup()
-    }, 1500)
+    console.log('Waiting 1000 before handling popup...');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    await this.handlePopup();
   }
 
   waitForElement(selector, textOptions, maxWaitTime = 30000) {
@@ -650,23 +726,24 @@ class QuizSolver {
   }
 
   async init() {
-    console.log('Initializing auto quiz solver - waiting for Start Quiz button...')
+    console.log('Initializing auto quiz solver - waiting for Start Quiz or Retake Quiz button...')
     
-    const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
+    const quizBtn = await this.waitForElement(null, ['Start Quiz', 'Retake Quiz'], this.delay * 1000);
     
-    if (!startBtn) {
-        console.log("Start Quiz button not found on this page.");
+    if (!quizBtn) {
+        console.log("Start Quiz or Retake Quiz button not found on this page.");
         return;
     }
     
-    console.log("Start Quiz button detected and ready!");
-    startBtn.style.backgroundColor = 'green';
-    startBtn.style.color = 'white';
-    startBtn.style.border = '2px solid #00ff00';
+    const buttonText = quizBtn.textContent.trim();
+    console.log(`${buttonText} button detected and ready!`);
+    quizBtn.style.backgroundColor = 'green';
+    quizBtn.style.color = 'white';
+    quizBtn.style.border = '2px solid #00ff00';
     
-    startBtn.addEventListener('click', () => {
-      console.log("User clicked Start Quiz - extension taking over...");
-      this.start(false);
+    quizBtn.addEventListener('click', async () => {
+      console.log(`User clicked ${buttonText} - extension taking over...`);
+      await this.start(false);
     });
   }
 
@@ -735,13 +812,14 @@ class QuizSolver {
     this.AI_MODEL = await this.getAiModel();
 
     if (this.autoStart === '1') {
-      console.log('Auto-start enabled. Waiting for Start Quiz button...');
-      const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
-      if (startBtn) {
-        console.log('Start Quiz button detected. Auto-clicking...');
+      console.log('Auto-start enabled. Waiting for Start Quiz or Retake Quiz button...');
+      const quizBtn = await this.waitForElement(null, ['Start Quiz', 'Retake Quiz'], this.delay * 1000);
+      if (quizBtn) {
+        const buttonText = quizBtn.textContent.trim();
+        console.log(`${buttonText} button detected. Auto-clicking...`);
         this.start(true);
       } else {
-        console.log('Start Quiz button not found within timeout.');
+        console.log('Start Quiz or Retake Quiz button not found within timeout.');
       }
     } else {
       await this.init();
@@ -861,13 +939,14 @@ class QuizSolver {
         }
 
         if (this.autoStart === '1') {
-            console.log('Auto-start enabled. Waiting for Start Quiz button...');
-            const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
-            if (startBtn) {
-                console.log('Start Quiz button detected. Auto-clicking...');
+            console.log('Auto-start enabled. Waiting for Start Quiz or Retake Quiz button...');
+            const quizBtn = await this.waitForElement(null, ['Start Quiz', 'Retake Quiz'], this.delay * 1000);
+            if (quizBtn) {
+                const buttonText = quizBtn.textContent.trim();
+                console.log(`${buttonText} button detected. Auto-clicking...`);
                 this.start(true);
             } else {
-                console.log('Start Quiz button not found within timeout.');
+                console.log('Start Quiz or Retake Quiz button not found within timeout.');
             }
         } else {
             await this.init();
