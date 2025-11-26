@@ -64,6 +64,7 @@ You can switch between models anytime in the extension popup.
   - Great for batch-solving multiple quizzes.
 - **Off**: The "Start Quiz" button turns green, but you need to click it manually.
   - Gives you control over when to start.
+<img width="1218" height="498" alt="image" src="https://github.com/user-attachments/assets/c4cc67f3-cba0-497a-8f4c-3e05d794c924" />
 
 ### 🔹 **How to Manage API Keys?**
 1. Click the extension icon in your browser toolbar.
@@ -71,13 +72,17 @@ You can switch between models anytime in the extension popup.
 3. Enter or modify your API keys directly in the input fields.
 4. Click "Save" for each key you modify.
 5. Use the "Show/Hide" button to view your keys.
+<img width="413" height="478" alt="image" src="https://github.com/user-attachments/assets/416fd52e-618f-4d86-93dc-dd9697c9387c" />
 
 **No need to edit localStorage anymore!** Everything is managed through the UI.
 
 ### 🔹 **What Do Different Page Background Colors Mean?**
 - 🟡 **Yellow**: Fetching answers from the AI backend (loading).
+<img width="2544" height="1038" alt="image" src="https://github.com/user-attachments/assets/179de4c2-cf7b-4ce3-b058-ae42502e4d1f" />
 - 🟢 **Green**: Answers received successfully! Quiz solving in progress.
+<img width="2548" height="1003" alt="image" src="https://github.com/user-attachments/assets/ec861140-7641-4469-b5aa-51c6ba965dbf" />
 - 🔴 **Red**: Error occurred. An error box will appear with details and a retry button.
+<img width="2550" height="820" alt="image" src="https://github.com/user-attachments/assets/8f61cecb-4d70-43d7-a0d5-aee0a57fb1d3" />
 
 ### 🔹 **What If I Get an Error?**
 When an error occurs:
@@ -85,6 +90,7 @@ When an error occurs:
 2. The error message shows the exact problem (API key invalid, model not found, etc.).
 3. Click **"Retry"** to try again after fixing the issue.
 4. Or click the **"×"** to dismiss the error.
+<img width="423" height="444" alt="image" src="https://github.com/user-attachments/assets/2cb61dbe-0edc-4f66-a5db-fc6ddcb73aa1" />
 
 Common errors:
 - **"API Key not provided"**: Add your API key in the extension popup.
@@ -137,3 +143,4 @@ Use the Auto Start feature:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
