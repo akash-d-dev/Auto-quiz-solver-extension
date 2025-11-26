@@ -1,6 +1,6 @@
 class QuizSolver {
-  static apiUrl = 'https://k-quiz-solver-api.onrender.com'
-  // static apiUrl = 'http://localhost:8000';
+  // static apiUrl = 'https://k-quiz-solver-api.onrender.com'
+  static apiUrl = 'http://localhost:8000';
 
   constructor() {
     this.ansArray = [-1, -1, -1, -1, -1]
@@ -9,9 +9,9 @@ class QuizSolver {
     this.G_API_KEY = localStorage.getItem('G_API_KEY') || ''
     this.C_API_KEY = localStorage.getItem('C_API_KEY') || ''
     this.X_API_KEY = localStorage.getItem('X_API_KEY') || ''
-    this.delay = 8
+    this.delay = 30
     this.autoStart = '0'
-    this.AI_MODEL = 'gemini-flash-latest'
+    this.AI_MODEL = 'gemini-2.5-flash'
     this.modal = null
     this.modalContent
     this.toggleModalBtn
@@ -50,7 +50,7 @@ class QuizSolver {
     this.G_API_KEY = localStorage.getItem('G_API_KEY') || '';
     this.C_API_KEY = localStorage.getItem('C_API_KEY') || '';
     this.X_API_KEY = localStorage.getItem('X_API_KEY') || '';
-    this.AI_MODEL = 'gemini-flash-latest'
+    this.AI_MODEL = 'gemini-2.5-flash'
     this.modal = null;
     this.modalContent = undefined;
     this.toggleModalBtn = undefined;
@@ -145,7 +145,7 @@ class QuizSolver {
   getAiModel() {
     return new Promise((resolve) => {
       chrome.storage.sync.get('aiModel', function (data) {
-        const aiModel = data.aiModel || 'gemini-flash-latest'
+        const aiModel = data.aiModel || 'gemini-2.5-flash'
         resolve(aiModel)
       })
     })
@@ -233,9 +233,9 @@ class QuizSolver {
 
     try {
       const AI_MODELS = {
-        gpt: ['chatgpt-4o-latest', 'gpt-5-mini'],
-        gemini: ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-pro', 'Gemini 3 Pro'],
-        grok: ['grok-2-latest', 'grok-3-latest']
+        gpt: ['gpt-5-mini', 'gpt-4o'],
+        gemini: ['gemini-2.5-flash', 'gemini-2.5-pro'],
+        grok: ['grok-3-mini', 'grok-2']
       }
 
       const MODEL_KEYS = {
@@ -272,6 +272,7 @@ class QuizSolver {
       const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
 
       try {
+        console.log(qna)
         const response = await fetch(QuizSolver.apiUrl, {
           method: 'POST',
           body: JSON.stringify(qna),
@@ -287,33 +288,41 @@ class QuizSolver {
         console.log('Response: ', response)
 
         if (response.ok) {
-          console.log('Got it...')
+          console.log('Got response from API...')
+          let responseData;
           try {
-            this.ansArray = await response.json()
-            console.log(this.ansArray)
-            this.createModalWindow()
-            // toggleModalWindow();
+            responseData = await response.json();
+            console.log('API Response:', responseData);
           } catch (error) {
-            throw new Error('AI API failed to fetch answers')
+            throw new Error('Failed to parse API response');
           }
-          // if (this.ansArray.length !== 5)
-          //   throw new Error('Failed to fetch all answers')
-          this.ansArray.map((ans) => {
-            if (ans === -1) {
-              throw new Error('Failed to fetch all answers')
-            }
-          })
-          
-          // Visual cue: Success
-          if (background) background.style.backgroundColor = '#ecffec'; // Light Green
-          
-          // Remove retry button if it exists
-          const existingRetryBtn = document.getElementById('quiz-solver-retry-btn');
-          if (existingRetryBtn) existingRetryBtn.remove();
 
-          return this.ansArray
+          if (responseData.error && responseData.error !== 'null') {
+            throw new Error(responseData.error);
+          }
+
+          this.ansArray = responseData.result || responseData;
+          console.log('Answers:', this.ansArray);
+
+          if (!Array.isArray(this.ansArray) || this.ansArray.length === 0) {
+            throw new Error('Invalid response format from API');
+          }
+
+          const hasInvalidAnswers = this.ansArray.some((ans) => ans === -1);
+          if (hasInvalidAnswers) {
+            throw new Error('AI failed to answer some questions. Please check your API key and model selection.');
+          }
+
+          this.createModalWindow();
+          
+          if (background) background.style.backgroundColor = '#ecffec';
+          
+          const existingErrorContainer = document.getElementById('quiz-solver-error-container');
+          if (existingErrorContainer) existingErrorContainer.remove();
+
+          return this.ansArray;
         } else {
-          throw new Error('Failed to fetch quiz')
+          throw new Error(`API request failed with status ${response.status}`);
         }
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -363,40 +372,114 @@ class QuizSolver {
         this.ansData = await this.getQuizAnswers(qna)
         this.startSolvingQuiz()
       } catch (error) {
-        // Visual cue: Failure (Red background) - Redundant but safe to keep sync
         const background = document.querySelector('div.flex-1.pt-8.min-h-\\[78vh\\]') || document.body;
         if (background) background.style.backgroundColor = '#ff605f';
 
-        // Check if button already exists
-        if (!document.getElementById('quiz-solver-retry-btn')) {
-          const button = document.createElement('button')
-          button.id = 'quiz-solver-retry-btn'; // Add ID for easy finding
-          button.textContent = 'Retry'
-          // Style the button to be visible
-          Object.assign(button.style, {
-              marginLeft: '16px',
+        if (!document.getElementById('quiz-solver-error-container')) {
+          const errorContainer = document.createElement('div');
+          errorContainer.id = 'quiz-solver-error-container';
+          Object.assign(errorContainer.style, {
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              zIndex: '10001',
+              backgroundColor: 'white',
+              border: '3px solid red',
+              borderRadius: '8px',
+              padding: '15px',
+              paddingTop: '35px',
+              maxWidth: '400px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+          });
+
+          const closeButton = document.createElement('button');
+          closeButton.textContent = '×';
+          Object.assign(closeButton.style, {
+              position: 'absolute',
+              top: '5px',
+              right: '10px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              fontSize: '24px',
+              color: '#999',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              lineHeight: '1',
+              padding: '0',
+              width: '30px',
+              height: '30px'
+          });
+
+          closeButton.addEventListener('click', () => {
+            errorContainer.remove();
+          });
+
+          closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.color = 'red';
+          });
+
+          closeButton.addEventListener('mouseleave', () => {
+            closeButton.style.color = '#999';
+          });
+
+          const errorTitle = document.createElement('div');
+          errorTitle.textContent = 'Error Occurred';
+          Object.assign(errorTitle.style, {
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: 'red',
+              marginBottom: '10px'
+          });
+
+          const errorMessage = document.createElement('div');
+          errorMessage.textContent = error.message || String(error);
+          Object.assign(errorMessage.style, {
+              fontSize: '13px',
+              color: '#333',
+              marginBottom: '12px',
+              wordWrap: 'break-word',
+              backgroundColor: '#f9f9f9',
+              padding: '8px',
+              borderRadius: '4px',
+              fontFamily: 'monospace'
+          });
+
+          const retryButton = document.createElement('button');
+          retryButton.id = 'quiz-solver-retry-btn';
+          retryButton.textContent = 'Retry';
+          Object.assign(retryButton.style, {
               backgroundColor: 'red',
               color: 'white',
               padding: '10px 20px',
               borderRadius: '5px',
-              position: 'fixed',
-              bottom: '80px', // Above the Solve Quiz button if present
-              right: '20px',
-              zIndex: '10001',
+              border: 'none',
               cursor: 'pointer',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              fontSize: '14px',
+              width: '100%'
           });
           
-          button.addEventListener('click', () => {
-            // Reset background to loading state (optional, getQuizAnswers will do it)
-            // Do NOT remove the button here, so it persists if retry fails again
-            this.reset()
-            this.main(qna, true)
-          })
-          
-          document.body.appendChild(button);
+          retryButton.addEventListener('click', () => {
+            errorContainer.remove();
+            this.reset();
+            this.main(qna, true);
+          });
+
+          retryButton.addEventListener('mouseenter', () => {
+            retryButton.style.backgroundColor = '#cc0000';
+          });
+
+          retryButton.addEventListener('mouseleave', () => {
+            retryButton.style.backgroundColor = 'red';
+          });
+
+          errorContainer.appendChild(closeButton);
+          errorContainer.appendChild(errorTitle);
+          errorContainer.appendChild(errorMessage);
+          errorContainer.appendChild(retryButton);
+          document.body.appendChild(errorContainer);
         }
-        console.error(error)
+        console.error('Quiz Solver Error:', error);
       }
   }
 

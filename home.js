@@ -1,7 +1,7 @@
 console.log('home script running');
 
 let autoStart = '0';
-let aiModel = 'gemini-2.0-flash-lite';
+let aiModel = 'gemini-2.5-flash';
 
 function updateApiKeyStatus(keyName, statusElement, inputElement) {
   const value = inputElement.value.trim();
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   chrome.storage.sync.get('aiModel', function (data) {
-    let aiModel = data.aiModel || 'gemini-flash-latest';
+    let aiModel = data.aiModel || 'gemini-2.5-flash';
     aiModelElement.value = aiModel;
   });
   aiModelElement.addEventListener('change', function () {

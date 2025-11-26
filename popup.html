@@ -162,16 +162,22 @@
   </div>
 
   <div class="flex">
-    <label for="ai-model">AI Model:</label>
+    <label for="ai-model">Select AI Model:</label>
     <select name="ai-model" id="ai-model">
-      <option value="gemini-flash-latest">Gemini Flash Latest</option>
-      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-      <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-      <option value="Gemini 3 Pro">Gemini 3 Pro</option>
-      <option value="gpt-5-mini">GPT-5 Mini</option>
-      <option value="chatgpt-4o-latest">GPT-4o Latest</option>
-      <option value="grok-2-latest">Grok-2 Latest</option>
-      <option value="grok-3-latest">Grok-3 Latest</option>
+      <optgroup label="Google Gemini">
+        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+      </optgroup>
+  
+      <optgroup label="OpenAI">
+        <option value="gpt-4o">GPT-4o</option>
+        <option value="gpt-5-mini">GPT-5 Mini</option>
+      </optgroup>
+  
+      <optgroup label="xAI Grok">
+        <option value="grok-2">Grok 2</option>
+        <option value="grok-3-mini">Grok 3 Mini</option>
+      </optgroup>
     </select>
   </div>
 
