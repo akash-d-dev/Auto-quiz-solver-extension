@@ -79,10 +79,13 @@ You can switch between models anytime in the extension popup.
 ### 🔹 **What Do Different Page Background Colors Mean?**
 - 🟡 **Yellow**: Fetching answers from the AI backend (loading).
 <img width="2544" height="1038" alt="image" src="https://github.com/user-attachments/assets/179de4c2-cf7b-4ce3-b058-ae42502e4d1f" />
+
 - 🟢 **Green**: Answers received successfully! Quiz solving in progress.
 <img width="2548" height="1003" alt="image" src="https://github.com/user-attachments/assets/ec861140-7641-4469-b5aa-51c6ba965dbf" />
+
 - 🔴 **Red**: Error occurred. An error box will appear with details and a retry button.
 <img width="2550" height="820" alt="image" src="https://github.com/user-attachments/assets/8f61cecb-4d70-43d7-a0d5-aee0a57fb1d3" />
+
 
 ### 🔹 **What If I Get an Error?**
 When an error occurs:
@@ -143,4 +146,5 @@ Use the Auto Start feature:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
 
