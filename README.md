@@ -1,6 +1,6 @@
 ---
 
-# Auto Quiz Solver Extension for Kalvium Community
+# Auto Quiz Solver 2.0 Extension for Kalvium Community
 
 🚀 **Tired of solving quizzes manually?**
 Use this browser extension to automatically solve Kalvium community quizzes! Just have your API keys ready. 😁
@@ -23,60 +23,117 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 4. Click on **Load Unpacked** and select the entire extension directory.
 
 ### 🔹 **How to Use**
+
+#### **First Time Setup:**
 1. After loading the extension, open **kalvium.community**.
-2. A popup will appear asking for your LLM API keys.
-   - Provide your API keys.
-   - If you want to skip any key, just press cancel (Make sure at least one LLM key is provided).
-3. Open any module page on **kalvium.community**(which has a quiz) in a new tab (or refresh the page).
-4. Wait for the **"Mark as Done"** button to turn green, then click it.
-5. The extension will handle the rest! ✅
+2. If you have no API keys stored, popups will appear asking for your LLM API keys.
+   - You can skip any key by leaving it empty or clicking cancel.
+   - **At least one API key is required** for the extension to work.
+
+#### **Managing API Keys:**
+- Click the extension icon in your browser toolbar to open the popup.
+- View, edit, or add your API keys directly in the popup interface.
+- Keys are synced between the popup and the website automatically.
+- Green "(Present)" status means key is configured, Red "(Missing)" means no key.
+
+#### **Using the Extension:**
+1. Navigate to any quiz module page on **kalvium.community**.
+2. The extension automatically detects quiz pages - **no manual refresh needed!**
+3. The **"Start Quiz"** button will turn **green** when ready.
+4. Click the green button, and the extension handles the rest! ✅
+
+#### **Auto Start Mode:**
+- Enable "Auto Start" in the extension popup to automatically start quizzes.
+- The extension will click the Start Quiz button and solve automatically.
+- Useful for solving multiple quizzes quickly!
 
 ---
 
 ## ❓ **FAQs**
 
+### 🔹 **What AI Models Are Supported?**
+The extension supports multiple AI providers:
+- **Google Gemini**: Gemini 2.5 Flash (Fastest & Cheapest), Gemini 2.5 Pro
+- **OpenAI**: GPT-5 Mini (Best for Quizzes), GPT-4o (Legacy)
+- **xAI Grok**: Grok 3 Mini, Grok 2
+
+You can switch between models anytime in the extension popup.
+
 ### 🔹 **What is Auto Start?**
-- **Yes**: The quiz starts automatically whenever you open a module page with a quiz.
-  - Useful for solving multiple quizzes at once.
-- **No**: You need to manually click on **"Mark as Done"** on the module page to start solving the quiz.
+- **On**: The quiz starts and solves automatically when you open a quiz page.
+  - Great for batch-solving multiple quizzes.
+- **Off**: The "Start Quiz" button turns green, but you need to click it manually.
+  - Gives you control over when to start.
 
-### 🔹 **What is Delay?**
-- Delay is the time the extension waits before scanning the page for the **"Mark as Done"** button.
-- Adjust the delay based on your internet speed:
-  - **Increase** if your internet is slow.
-  - **Decrease** if your internet is fast.
+### 🔹 **How to Manage API Keys?**
+1. Click the extension icon in your browser toolbar.
+2. Scroll to the "API Keys" section.
+3. Enter or modify your API keys directly in the input fields.
+4. Click "Save" for each key you modify.
+5. Use the "Show/Hide" button to view your keys.
 
-### 🔹 **What is Token?**
-- You can provide your **own Kalvium access token** (usually from another email) to increase anonymity.
-- However, this feature is **no longer useful** as every user now gets different quiz questions.
+**No need to edit localStorage anymore!** Everything is managed through the UI.
 
-### 🔹 **How to Prevent the Quiz from Opening in Fullscreen?**
-- We are **exploiting a bug** to prevent full-page mode:
-  1. Turn on **Auto Start**.
-  2. Open the **module page(s)** in a new tab and do not go to that tab.
-  3. Wait until the quiz page for that module is opened.
-  4. When you open your quiz page, it will not go fullscreen.
-  - (*Recommended wait time: Delay + 5-10 seconds*)
+### 🔹 **What Do Different Page Background Colors Mean?**
+- 🟡 **Yellow**: Fetching answers from the AI backend (loading).
+- 🟢 **Green**: Answers received successfully! Quiz solving in progress.
+- 🔴 **Red**: Error occurred. An error box will appear with details and a retry button.
 
-### 🔹 **What Do Different Page Background Colors Indicate?**
-- 🟡 **Yellow**: The extension is retrieving answers from the backend (loading indicator).
-- 🔴 **Red**: Failed to fetch answers.
-- 🟢 **Green**: Answers have been fetched and now the extension has started solving the quiz.
+### 🔹 **What If I Get an Error?**
+When an error occurs:
+1. A **red error box** appears in the bottom-right corner.
+2. The error message shows the exact problem (API key invalid, model not found, etc.).
+3. Click **"Retry"** to try again after fixing the issue.
+4. Or click the **"×"** to dismiss the error.
 
-### 🔹 **How to Reset or Change API Keys?**
-1. Open **kalvium.community** and do **Inspect**.
-2. Go to **LocalStorage**.
-3. Modify or reset your API keys from there.
+Common errors:
+- **"API Key not provided"**: Add your API key in the extension popup.
+- **"Model not found"**: Select a valid model from the dropdown.
+- **"AI failed to answer"**: API quota exceeded or invalid response.
 
-### 🔹 **Why Did the Extension Fail to Solve the Quiz?**
-A failure can happen due to:
-- Invalid or expired **API keys** (Check if your API key has reached its limit or is incorrect).
-- Wrong or expired **access token**.
-- Other API-related issues (Check logs for more details).
+### 🔹 **Do I Need to Refresh After Navigating?**
+**No!** The extension automatically detects when you navigate to a quiz page using smart URL detection. Just click on quiz modules normally, and the extension activates instantly.
+
+### 🔹 **How to Prevent Fullscreen Mode?**
+Use the Auto Start feature:
+1. Enable **Auto Start** in the extension popup.
+2. Open quiz module pages in background tabs (don't switch to them immediately).
+3. The extension will start the quiz automatically in the background.
+4. When you switch to the tab, the quiz won't go fullscreen.
 
 ---
 
-## 💡 **Troubleshooting & Logs**
-If you face any issues, check the **extension logs** for more information.
+## 💡 **Troubleshooting & Tips**
+
+### **Extension Not Working?**
+1. **Check API Keys**: Open the popup and ensure at least one API key is present (green status).
+2. **Check Console Logs**: Press `F12` → Console tab to see detailed error messages.
+3. **Reload Extension**: Go to Extensions Manager → Click the refresh icon on the extension.
+4. **Verify URL**: Extension only works on `app.kalvium.community/livebooks/*/lessons` pages.
+
+### **Quiz Not Auto-Starting?**
+- Make sure **Auto Start** is enabled in the popup.
+- The Start Quiz button must be visible and loaded on the page.
+- Check console logs for "Start Quiz button detected" message.
+
+### **Answers Are Wrong?**
+- Try switching to a different AI model (GPT-5 Mini is recommended for quizzes).
+- Some models work better than others depending on question complexity.
+
+### **Performance Tips**
+- **Gemini 2.5 Flash**: Fastest and cheapest, great for simple quizzes.
+- **GPT-5 Mini**: Best accuracy for complex questions.
+- **Auto Start Off**: More control, better for reviewing questions first.
+
+---
+
+## 🎯 **Features Summary**
+✅ Automatic quiz solving with AI  
+✅ Smart page detection (no refresh needed)  
+✅ User-friendly API key management UI  
+✅ Multiple AI model support (Gemini, GPT, Grok)  
+✅ Detailed error messages with retry option  
+✅ Auto Start mode for batch processing  
+✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
