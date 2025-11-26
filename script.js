@@ -16,7 +16,31 @@ class QuizSolver {
     this.modalContent
     this.toggleModalBtn
     this.closeModelBtn
-    this.quizData = null; // Store intercepted data
+    this.quizData = null;
+    this.syncKeysFromChromeStorage();
+  }
+
+  async syncKeysFromChromeStorage() {
+    try {
+      const keys = await new Promise((resolve) => {
+        chrome.storage.local.get(['C_API_KEY', 'G_API_KEY', 'X_API_KEY'], resolve);
+      });
+      
+      if (keys.C_API_KEY && keys.C_API_KEY !== this.C_API_KEY) {
+        this.C_API_KEY = keys.C_API_KEY;
+        localStorage.setItem('C_API_KEY', this.C_API_KEY);
+      }
+      if (keys.G_API_KEY && keys.G_API_KEY !== this.G_API_KEY) {
+        this.G_API_KEY = keys.G_API_KEY;
+        localStorage.setItem('G_API_KEY', this.G_API_KEY);
+      }
+      if (keys.X_API_KEY && keys.X_API_KEY !== this.X_API_KEY) {
+        this.X_API_KEY = keys.X_API_KEY;
+        localStorage.setItem('X_API_KEY', this.X_API_KEY);
+      }
+    } catch (error) {
+      console.log('Could not sync keys from chrome.storage.local:', error);
+    }
   }
 
   async reset() {
@@ -33,6 +57,7 @@ class QuizSolver {
     this.closeModelBtn = undefined;
     this.quizData = null;
 
+    await this.syncKeysFromChromeStorage();
     this.AI_MODEL = await this.getAiModel()
 }
 
@@ -375,16 +400,15 @@ class QuizSolver {
       }
   }
 
-  // Start main function
   start(clickButton = true) {
     console.log('Starting quiz sequence...')
     if (clickButton) {
-        const startBtn = this.findButtonByText(['Start Quiz', 'Mark as Done', 'Take Quiz']);
+        const startBtn = this.findButtonByText(['Start Quiz']);
         if (startBtn) {
-            console.log('Auto-clicking start button');
+            console.log('Auto-clicking Start Quiz button');
             startBtn.click();
         } else {
-            console.log("Start button not found for auto-start");
+            console.log("Start Quiz button not found for auto-start");
         }
     }
     
@@ -393,46 +417,117 @@ class QuizSolver {
     }, 1500)
   }
 
-  // Initialize the script
-  init() {
-    console.log('Initializing auto quiz solver')
-    // Check if quiz is already active (options present)
-    const optionBtns = document.querySelectorAll('button.w-full.rounded-\\[8px\\].cursor-pointer');
-    
-    if (optionBtns.length > 0) {
-        console.log("Quiz already active. Adding Solve button.");
-        const solveBtn = this.createButton('Solve Quiz', 'green', '0', () => {
-            this.start(false); // Don't click start button, just proceed
-        });
-        Object.assign(solveBtn.style, {
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            zIndex: '10000',
-            padding: '15px 30px',
-            fontSize: '16px'
-        });
-        document.body.appendChild(solveBtn);
-        return;
-    }
+  waitForElement(selector, textOptions, maxWaitTime = 30000) {
+    return new Promise((resolve) => {
+      let timeoutId = null;
+      let observer = null;
+      let bodyObserver = null;
+      let resolved = false;
+      
+      const cleanup = () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+        if (bodyObserver) {
+          bodyObserver.disconnect();
+          bodyObserver = null;
+        }
+      };
+      
+      const checkElement = () => {
+        if (resolved) return false;
+        
+        if (selector) {
+          try {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length > 0) {
+              resolved = true;
+              cleanup();
+              resolve(elements);
+              return true;
+            }
+          } catch (e) {
+            console.error('Error querying selector:', e);
+          }
+        }
+        
+        if (textOptions && textOptions.length > 0) {
+          const button = this.findButtonByText(textOptions);
+          if (button) {
+            resolved = true;
+            cleanup();
+            resolve(button);
+            return true;
+          }
+        }
+        
+        return false;
+      };
 
-    // Look for launch button by text
-    const launchBtn = this.findButtonByText(['Start Quiz', 'Mark as Done', 'Take Quiz']);
+      if (checkElement()) {
+        return;
+      }
+
+      observer = new MutationObserver(() => {
+        checkElement();
+      });
+
+      if (document.body) {
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      } else {
+        bodyObserver = new MutationObserver(() => {
+          if (document.body && observer) {
+            observer.observe(document.body, {
+              childList: true,
+              subtree: true
+            });
+            checkElement();
+          }
+        });
+        bodyObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true
+        });
+      }
+
+      timeoutId = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          cleanup();
+          console.log(`Timeout waiting for element (${maxWaitTime}ms). Proceeding anyway...`);
+          resolve(null);
+        }
+      }, maxWaitTime);
+    });
+  }
+
+  async init() {
+    console.log('Initializing auto quiz solver - waiting for Start Quiz button...')
     
-    if (!launchBtn) {
+    const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
+    
+    if (!startBtn) {
         console.log("Start Quiz button not found on this page.");
         return;
     }
     
-    // Visual indication
-    launchBtn.style.backgroundColor = 'green';
-    launchBtn.style.color = 'white';
-    launchBtn.style.border = '2px solid #00ff00';
+    console.log("Start Quiz button detected and ready!");
+    startBtn.style.backgroundColor = 'green';
+    startBtn.style.color = 'white';
+    startBtn.style.border = '2px solid #00ff00';
     
-    launchBtn.addEventListener('click', () => {
-      console.log("User clicked Start Quiz");
-      this.start(false); // User already clicked, so we don't need to
-    })
+    startBtn.addEventListener('click', () => {
+      console.log("User clicked Start Quiz - extension taking over...");
+      this.start(false);
+    });
   }
 
   wakeUpServer() {
@@ -522,32 +617,53 @@ class QuizSolver {
         this.AI_MODEL = await this.getAiModel()
         this.delay = await this.getWaitFor()
 
-        if (!this.C_API_KEY) {
-            this.C_API_KEY = String(prompt('Please enter your OpenAI API Key'))
-            localStorage.setItem('C_API_KEY', this.C_API_KEY)
-            console.log('OpenAI API Key Provided:', this.C_API_KEY)
+        // Check if all three API keys are missing
+        const allKeysMissing = !this.C_API_KEY && !this.G_API_KEY && !this.X_API_KEY;
+        
+        if (allKeysMissing) {
+            const cKey = prompt('Please enter your OpenAI API Key (or leave empty to skip)');
+            if (cKey && cKey.trim()) {
+                this.C_API_KEY = String(cKey.trim());
+                localStorage.setItem('C_API_KEY', this.C_API_KEY);
+                chrome.storage.local.set({ C_API_KEY: this.C_API_KEY });
+                console.log('OpenAI API Key Provided:', this.C_API_KEY);
+            }
+
+            const gKey = prompt('Please enter your Google API Key (or leave empty to skip)');
+            if (gKey && gKey.trim()) {
+                this.G_API_KEY = String(gKey.trim());
+                localStorage.setItem('G_API_KEY', this.G_API_KEY);
+                chrome.storage.local.set({ G_API_KEY: this.G_API_KEY });
+                console.log('Google API Key Provided:', this.G_API_KEY);
+            }
+
+            const xKey = prompt('Please enter your Grok API Key (or leave empty to skip)');
+            if (xKey && xKey.trim()) {
+                this.X_API_KEY = String(xKey.trim());
+                localStorage.setItem('X_API_KEY', this.X_API_KEY);
+                chrome.storage.local.set({ X_API_KEY: this.X_API_KEY });
+                console.log('Grok API Key Provided:', this.X_API_KEY);
+            }
         }
 
-        if (!this.G_API_KEY) {
-            this.G_API_KEY = String(prompt('Please enter your Google API Key'))
-            localStorage.setItem('G_API_KEY', this.G_API_KEY)
-            console.log('Google API Key Provided:', this.G_API_KEY)
+        if (this.autoStart === '1') {
+            console.log('Auto-start enabled. Waiting for Start Quiz button...');
+            const startBtn = await this.waitForElement(null, ['Start Quiz'], this.delay * 1000);
+            if (startBtn) {
+                console.log('Start Quiz button detected. Auto-clicking...');
+                this.start(true);
+            } else {
+                console.log('Start Quiz button not found within timeout.');
+            }
+        } else {
+            await this.init();
         }
-
-        if (!this.X_API_KEY) {
-            this.X_API_KEY = String(prompt('Please enter your Grok API Key'))
-            localStorage.setItem('X_API_KEY', this.X_API_KEY)
-            console.log('Grok API Key Provided:', this.X_API_KEY)
-        }
-
-        setTimeout(() => {
-            this.autoStart === '1' ? this.start(true) : this.init()
-        }, this.delay * 1000)
 
         console.log('Foreground script running')
-        console.log('Delay: ', this.delay)
+        console.log('Max wait time (delay): ', this.delay, 'seconds')
         console.log('Auto Start: ', this.autoStart === '1' ? 'Yes' : 'No')
         console.log('AI Model: ', this.AI_MODEL)
+        console.log('Using smart DOM detection - will proceed as soon as elements are ready')
     };
 
     if (document.readyState === 'loading') {

@@ -27,8 +27,86 @@
     }
 
     input {
-      width: 42px;
       margin: 8px;
+    }
+
+    input[type="number"] {
+      width: 42px;
+    }
+
+    input[type="password"], input[type="text"] {
+      width: 200px;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .api-key-section {
+      margin: 8px 0;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+
+    .api-key-label {
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .api-key-status {
+      font-size: 12px;
+      color: #666;
+      margin-left: 8px;
+    }
+
+    .api-key-status.missing {
+      color: #d32f2f;
+    }
+
+    .api-key-status.present {
+      color: #388e3c;
+    }
+
+    .api-key-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-visibility {
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      background-color: #e0e0e0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .toggle-visibility:hover {
+      background-color: #d0d0d0;
+    }
+
+    .save-btn {
+      padding: 4px 12px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .save-btn:hover {
+      background-color: #45a049;
+    }
+
+    h3 {
+      margin: 12px 8px 8px 8px;
+      font-size: 14px;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 4px;
     }
 
     img {
@@ -97,9 +175,42 @@
     </select>
   </div>
 
-  <div class="flex">
-    <label for="gemini-model">Delay(sec)</label>
-    <input type="number" name="delay" id="delay" min="1" max="100" />
+  <h3>API Keys</h3>
+  
+  <div class="api-key-section">
+    <label class="api-key-label">
+      OpenAI API Key (C_API_KEY)
+      <span class="api-key-status" id="c-key-status"></span>
+    </label>
+    <div class="api-key-input-group">
+      <input type="password" id="c-api-key" placeholder="Enter OpenAI API Key" />
+      <button class="toggle-visibility" data-target="c-api-key">Show</button>
+      <button class="save-btn" data-key="C_API_KEY" data-input="c-api-key">Save</button>
+    </div>
+  </div>
+
+  <div class="api-key-section">
+    <label class="api-key-label">
+      Google API Key (G_API_KEY)
+      <span class="api-key-status" id="g-key-status"></span>
+    </label>
+    <div class="api-key-input-group">
+      <input type="password" id="g-api-key" placeholder="Enter Google API Key" />
+      <button class="toggle-visibility" data-target="g-api-key">Show</button>
+      <button class="save-btn" data-key="G_API_KEY" data-input="g-api-key">Save</button>
+    </div>
+  </div>
+
+  <div class="api-key-section">
+    <label class="api-key-label">
+      Grok API Key (X_API_KEY)
+      <span class="api-key-status" id="x-key-status"></span>
+    </label>
+    <div class="api-key-input-group">
+      <input type="password" id="x-api-key" placeholder="Enter Grok API Key" />
+      <button class="toggle-visibility" data-target="x-api-key">Show</button>
+      <button class="save-btn" data-key="X_API_KEY" data-input="x-api-key">Save</button>
+    </div>
   </div>
 </body>
 
