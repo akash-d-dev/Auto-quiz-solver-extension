@@ -130,8 +130,7 @@ Common errors:
 ### 🔹 **How to Prevent Fullscreen Mode?**
 **Method 1: Use Fullscreen Bypass (Recommended)**
 1. Enable **Fullscreen Bypass** in the extension popup (On by default).
-2. Enable **Auto Start**.
-3. Navigate to any quiz page - the extension handles everything automatically!
+2. Navigate to any quiz page - the extension handles everything automatically!
 
 **Method 2: Manual Background Loading**
 1. Open quiz module pages in background tabs (Ctrl+Click or Middle Mouse).
@@ -176,6 +175,7 @@ Common errors:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
 
 
 
