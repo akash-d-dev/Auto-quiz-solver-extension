@@ -96,7 +96,8 @@ The quiz website normally enforces fullscreen mode and pauses when you switch ta
 3. Enter or modify your API keys directly in the input fields.
 4. Click "Save" for each key you modify.
 5. Use the "Show/Hide" button to view your keys.
-<img width="413" height="478" alt="image" src="https://github.com/user-attachments/assets/416fd52e-618f-4d86-93dc-dd9697c9387c" />
+<img width="403" height="503" alt="image" src="https://github.com/user-attachments/assets/5c757a00-a19c-4771-8874-e1a97d94b3f1" />
+
 
 **No need to edit localStorage anymore!** Everything is managed through the UI.
 
@@ -175,6 +176,7 @@ Common errors:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
 
 
 
