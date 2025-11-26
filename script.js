@@ -1,6 +1,6 @@
 class QuizSolver {
-  // static apiUrl = 'https://k-quiz-solver-api.onrender.com'
-  static apiUrl = 'http://localhost:8000';
+  static apiUrl = 'https://k-quiz-solver-api.onrender.com'
+  // static apiUrl = 'http://localhost:8000';
 
   constructor() {
     this.ansArray = [-1, -1, -1, -1, -1]
