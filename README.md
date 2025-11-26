@@ -35,10 +35,10 @@ If you find this useful, please be responsible and leave a star! ⭐😅
 
 ## ❓ **FAQs**
 
-### 🔹 **What is Auto Start - On/Off ?**
-- **On**: The quiz starts automatically whenever you open a module page with a quiz.
+### 🔹 **What is Auto Start?**
+- **Yes**: The quiz starts automatically whenever you open a module page with a quiz.
   - Useful for solving multiple quizzes at once.
-- **Off**: You need to manually click on **"Mark as Done"** on the module page to start solving the quiz.
+- **No**: You need to manually click on **"Mark as Done"** on the module page to start solving the quiz.
 
 ### 🔹 **What is Delay?**
 - Delay is the time the extension waits before scanning the page for the **"Mark as Done"** button.
@@ -80,4 +80,3 @@ A failure can happen due to:
 If you face any issues, check the **extension logs** for more information.
 
 **Enjoy seamless quiz solving!** 🎉
-

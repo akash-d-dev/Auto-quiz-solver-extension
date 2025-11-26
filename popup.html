@@ -1,101 +1,106 @@
 <!DOCTYPE html>
 <html>
-  <script src="./home.js"></script>
-  <script src="./background.js"></script>
-  <head>
-    <title>Get Answers</title>
-    <style>
-      /* BEGIN: Added CSS */
-      body {
-        background-color: rgb(255, 208, 208);
-        font-family: Arial, sans-serif;
-      }
+<script src="./home.js"></script>
+<script src="./background.js"></script>
 
-      .flex {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 4px;
-        /* width: 150px; */
-        /* height: 50px; */
-        /* flex-direction: column; */
-      }
+<head>
+  <title>Get Answers</title>
+  <style>
+    /* BEGIN: Added CSS */
+    body {
+      background-color: rgb(255, 208, 208);
+      font-family: Arial, sans-serif;
+    }
 
-      select {
-        margin: 8px;
-      }
-      input {
-        width: 42px;
-        margin: 8px;
-      }
-      img {
-        width: 30px;
-        height: 30px;
-        margin: 0 auto;
-        display: block;
-        border: 1px solid black;
-      }
-      .image-card {
-        margin: 8px;
-      }
-      a{
-        display: flex;
-        width: 30px;
-      }
-      .image-card{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      span {
-        margin: 0 8px;
-      }
-      /* #token-input{
+    .flex {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 4px;
+      /* width: 150px; */
+      /* height: 50px; */
+      /* flex-direction: column; */
+    }
+
+    select {
+      margin: 8px;
+    }
+
+    input {
+      width: 42px;
+      margin: 8px;
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto;
+      display: block;
+      border: 1px solid black;
+    }
+
+    .image-card {
+      margin: 8px;
+    }
+
+    a {
+      display: flex;
+      width: 30px;
+    }
+
+    .image-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    span {
+      margin: 0 8px;
+    }
+
+    /* #token-input{
         width: 75px !important;
       } */
-      /* END: Added CSS */
-    </style>
-  </head>
-  <body>
-    <div class="image-card">
-      <a href="https://github.com/akash-d-dev/chalvium-quiz-solver-extension" target="_blank">
-        <img src="./img/akash-d-dev.jpg" alt="logo" />
-      </a>
-      <span></span>
-        <a href="https://k-quiz-solver-api.onrender.com" target="_blank">
-            <button>API</button>
-        </a>
-    </div>
-    <div class="flex">
-      <label for="auto-start">Auto Start:</label>
-      <select name="auto-start" id="auto-start">
-        <option value="1">On</option>
-        <option value="0">Off</option>
-      </select>
-    </div>
+    /* END: Added CSS */
+  </style>
+</head>
 
-    <div class="flex">
-      <label for="ai-model">AI Model:</label>
-      <select name="ai-model" id="ai-model">
-        <option value="gemini-2.0-flash-lite">Gemini-flash-lite</option>
-        <option value="gemini-2.0-flash">Gemini-flash</option>
-        <option value="gpt-3.5-turbo">GPT-3.5</option>
-        <option value="chatgpt-4o-latest">GPT-4o</option>
-        <option value="grok-2-latest">Grok-2</option>
+<body>
+  <div class="image-card">
+    <a href="https://github.com/akash-d-dev/chalvium-quiz-solver-extension" target="_blank">
+      <img src="./img/akash-d-dev.jpg" alt="logo" />
+    </a>
+    <span></span>
+    <a href="https://k-quiz-solver-api.onrender.com" target="_blank">
+      <button>API</button>
+    </a>
+  </div>
+  <div class="flex">
+    <label for="auto-start">Auto Start:</label>
+    <select name="auto-start" id="auto-start">
+      <option value="1">On</option>
+      <option value="0">Off</option>
+    </select>
+  </div>
 
-      </select>
-    </div>
+  <div class="flex">
+    <label for="ai-model">AI Model:</label>
+    <select name="ai-model" id="ai-model">
+      <option value="gemini-flash-latest">Gemini Flash Latest</option>
+      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+      <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+      <option value="Gemini 3 Pro">Gemini 3 Pro</option>
+      <option value="gpt-5-mini">GPT-5 Mini</option>
+      <option value="chatgpt-4o-latest">GPT-4o Latest</option>
+      <option value="grok-2-latest">Grok-2 Latest</option>
+      <option value="grok-3-latest">Grok-3 Latest</option>
+    </select>
+  </div>
 
-    <div class="flex">
-      <label for="gemini-model">Delay(sec)</label>
-      <input type="number" name="delay" id="delay" min="1" max="100" />
-    </div>
+  <div class="flex">
+    <label for="gemini-model">Delay(sec)</label>
+    <input type="number" name="delay" id="delay" min="1" max="100" />
+  </div>
+</body>
 
-    <div class="flex">
-      <label for="api-token">Token(opt)</label>
-     <input type="text" id="kalvi-api-token">
-     <!-- <button id="save-token">Save</button> -->
-    </div>
-    </div>
-  </body>
 </html>

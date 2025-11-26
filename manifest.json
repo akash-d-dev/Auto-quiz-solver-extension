@@ -1,8 +1,8 @@
 {
   "name": "Kalvium Auto Quiz",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "manifest_version": 3,
-  "description": "Let's solve the dam quiz",
+  "description": "Let's solve the quiz",
   "permissions": [
     "cookies",
     "activeTab",
@@ -23,16 +23,32 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://kalvium.community/livebooks/*"],
-      "js":  ["script.js"]
+      "matches": [
+        "*://*.kalvium.community/*"
+      ],
+      "js": [
+        "script.js"
+      ],
+      "run_at": "document_start"
     }
   ],
   "host_permissions": [
     "https://assessment-api.kalvium.community/api/assessments/*",
     "https://kalvium.community/*",
+    "https://app.kalvium.community/*",
     "https://signal-api.kalvium.community/*",
     "*://*.google.com/",
     "<all_urls>",
     "*://*/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "interceptor.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ]
 }
