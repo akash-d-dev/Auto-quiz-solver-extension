@@ -70,12 +70,13 @@ You can switch between models anytime in the extension popup.
 
 ### 🔹 **What is Fullscreen Bypass?**
 The quiz website normally enforces fullscreen mode and pauses when you switch tabs or lose focus. This extension exploits a bug to bypass these restrictions.
+<img width="2529" height="1349" alt="image" src="https://github.com/user-attachments/assets/9c6b09ce-cc67-41ac-894f-e41d88db9865" />
 
 **How it works:**
 1. Extension clicks "Start Quiz" for you
-2. Immediately switches to a temporary blank tab
+2. Immediately switches to a temporary blank tab or switches to an already opened tab
 3. Quiz starts in the background (website doesn't detect the switch)
-4. Returns to quiz tab after 2 seconds
+4. Returns to quiz tab after a few seconds
 5. Quiz is running without fullscreen restrictions!
 
 **Settings:**
@@ -95,7 +96,8 @@ The quiz website normally enforces fullscreen mode and pauses when you switch ta
 3. Enter or modify your API keys directly in the input fields.
 4. Click "Save" for each key you modify.
 5. Use the "Show/Hide" button to view your keys.
-<img width="413" height="478" alt="image" src="https://github.com/user-attachments/assets/416fd52e-618f-4d86-93dc-dd9697c9387c" />
+<img width="403" height="503" alt="image" src="https://github.com/user-attachments/assets/5c757a00-a19c-4771-8874-e1a97d94b3f1" />
+
 
 **No need to edit localStorage anymore!** Everything is managed through the UI.
 
@@ -129,8 +131,7 @@ Common errors:
 ### 🔹 **How to Prevent Fullscreen Mode?**
 **Method 1: Use Fullscreen Bypass (Recommended)**
 1. Enable **Fullscreen Bypass** in the extension popup (On by default).
-2. Enable **Auto Start**.
-3. Navigate to any quiz page - the extension handles everything automatically!
+2. Navigate to any quiz page - the extension handles everything automatically!
 
 **Method 2: Manual Background Loading**
 1. Open quiz module pages in background tabs (Ctrl+Click or Middle Mouse).
@@ -175,5 +176,8 @@ Common errors:
 ✅ Visual feedback with color-coded backgrounds  
 
 **Enjoy seamless quiz solving!** 🎉
+
+
+
 
 
