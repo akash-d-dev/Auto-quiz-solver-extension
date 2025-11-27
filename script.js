@@ -348,7 +348,7 @@ class QuizSolver {
             key: keyToUse,
             model: this.AI_MODEL,
             model_type: modelToUse,
-            'quiz-url': window.location.href
+            quiz_url: window.location.href
           },
           signal: controller.signal
         });
