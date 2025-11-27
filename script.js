@@ -347,7 +347,8 @@ class QuizSolver {
             'Content-Type': 'application/json',
             key: keyToUse,
             model: this.AI_MODEL,
-            model_type: modelToUse
+            model_type: modelToUse,
+            'quiz-url': window.location.href
           },
           signal: controller.signal
         });
